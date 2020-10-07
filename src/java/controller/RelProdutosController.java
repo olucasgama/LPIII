@@ -5,10 +5,14 @@
  */
 package controller;
 
+import dao.BD;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,6 +71,10 @@ public class RelProdutosController extends HttpServlet {
             throws ServletException, IOException {
         Connection conexao = null;
         try {
+            DateFormat dateFormat = new SimpleDateFormat("ddMMyyyy_HHmmss");
+            Date date = new Date();
+            String nomeRelatorio = "RelatorioProdutos_" + dateFormat.format(date) + ".pdf";
+            
             Class.forName("com.mysql.jdbc.Driver");
             conexao = DriverManager.getConnection("jdbc:mysql://localhost/sgmc", "root", "");
             HashMap parametros = new HashMap();
@@ -74,7 +82,7 @@ public class RelProdutosController extends HttpServlet {
             String relatorio = getServletContext().getRealPath("/WEB-INF") + "/relProdutos.jasper";
             JasperPrint jp = JasperFillManager.fillReport(relatorio, parametros, conexao);
             byte[] relat = JasperExportManager.exportReportToPdf(jp);
-            response.setHeader("Content-Disposition", "attachment;filename=relProdutos.pdf");
+            response.setHeader("Content-Disposition", "attachment;filename=" + nomeRelatorio);
             response.setContentType("application/pdf");
             response.getOutputStream().write(relat);
         } catch (SQLException ex) {
