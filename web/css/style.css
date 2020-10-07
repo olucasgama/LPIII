@@ -1,0 +1,54 @@
+  .main-nav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #000000;
+  }
+
+  .main-nav h2 {
+    text-align: center;
+    color: #FFFFFF;
+  }
+
+  .main-table {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    background-color: #FFFFFF;
+  }
+
+  .main-table li a {
+    display: block;
+    height: 20px;
+    color: #000000;
+    padding: 10px 15px;
+    text-decoration: none;
+  }
+
+  .main-table li a:hover {
+    background-color: #555;
+    color: #FFFFFF;
+  }
+
+  .form-relatorio select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+  .form-relatorio input[type=submit] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }

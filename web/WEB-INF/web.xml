@@ -110,7 +110,11 @@
     </servlet>
     <servlet>
         <servlet-name>RelClientesController</servlet-name>
-        <servlet-class>relatorio.RelClientesController</servlet-class>
+        <servlet-class>controller.RelClientesController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RelProdutosController</servlet-name>
+        <servlet-class>controller.RelProdutosController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>PesquisaClienteController</servlet-name>
@@ -223,6 +227,10 @@
     <servlet-mapping>
         <servlet-name>RelClientesController</servlet-name>
         <url-pattern>/RelClientesController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RelProdutosController</servlet-name>
+        <url-pattern>/RelProdutosController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

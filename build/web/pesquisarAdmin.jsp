@@ -5,10 +5,13 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>SGMC - Pesquisa de Administradores</title>
+        <title>SGMC</title>
+        <link href="css/style.css" rel="stylesheet">
     </head>
     <body>
-        <h1>Pesquisa de Administradores</h1>
+        <ul class="main-nav">
+            <h2>SGMC - Pesquisa de Administradores</h2>
+        </ul>
         <table border=1>
             <tr>
                 <th>Nome</th>
