@@ -8,9 +8,17 @@ package model;
 import dao.FormaPagamentoDAO;
 import java.sql.SQLException;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity
 public class FormaPagamento {
-    private int idFormaPgto;
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idFormaPgto;
     private String nome;
     private int conta;
     private int agencia;
@@ -23,7 +31,7 @@ public class FormaPagamento {
     private double multaAtraso;
     private String situacaoConfirmacao;
 
-    public FormaPagamento(int idFormaPgto, String nome, int conta, int agencia, String nomeBanco, String tipoConta, int numMaxParcelas, int intervaloParcelas, double taxaBanco, double taxaOperadora, double multaAtraso, String situacaoConfirmacao) {
+    public FormaPagamento(Integer idFormaPgto, String nome, int conta, int agencia, String nomeBanco, String tipoConta, int numMaxParcelas, int intervaloParcelas, double taxaBanco, double taxaOperadora, double multaAtraso, String situacaoConfirmacao) {
         this.idFormaPgto = idFormaPgto;
         this.nome = nome;
         this.conta = conta;
@@ -46,11 +54,11 @@ public class FormaPagamento {
         this.nome = nome;
     }
     
-    public int getIdFormaPgto() {
+    public Integer getIdFormaPgto() {
         return idFormaPgto;
     }
 
-    public void setIdFormaPgto(int idFormaPgto) {
+    public void setIdFormaPgto(Integer idFormaPgto) {
         this.idFormaPgto = idFormaPgto;
     }
 
@@ -133,25 +141,24 @@ public class FormaPagamento {
     public void setSituacaoConfirmacao(String situacaoConfirmacao) {
         this.situacaoConfirmacao = situacaoConfirmacao;
     }
-
     
     public static FormaPagamento obterFormaPagamento (int idFormaPgto) throws SQLException, ClassNotFoundException{
-        return FormaPagamentoDAO.obterFormaPagamento(idFormaPgto);
-    }
+        return FormaPagamentoDAO.getInstancia().findFormaPagamento(idFormaPgto);
+}
     
     public static List<FormaPagamento> obterFormasPagamentos() throws ClassNotFoundException, SQLException{
-        return FormaPagamentoDAO.obterFormasPagamentos();
+        return FormaPagamentoDAO.getInstancia().findAllFormasPagamentos();
     }
     
     public void gravar() throws SQLException, ClassNotFoundException {
-        FormaPagamentoDAO.gravar(this);
+        FormaPagamentoDAO.getInstancia().save(this);
     }
     
     public void alterar() throws ClassNotFoundException, SQLException{
-        FormaPagamentoDAO.alterar(this);
+        FormaPagamentoDAO.getInstancia().save(this);
     }
     
     public void excluir() throws ClassNotFoundException, SQLException{
-        FormaPagamentoDAO.excluir(this);
+        FormaPagamentoDAO.getInstancia().remove(idFormaPgto);
     }
 }

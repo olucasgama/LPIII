@@ -8,17 +8,24 @@ package model;
 import dao.EnderecoDAO;
 import java.sql.SQLException;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity
 public class Endereco {
     
-    private int idEndereco;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idEndereco;
     private String logradouro;
     private String cidade;
     private String bairro;
     private String uf;
     private String cep;
 
-    public Endereco(int idEndereco, String logradouro, String cidade, String bairro, String uf, String cep) {
+    public Endereco(Integer idEndereco, String logradouro, String cidade, String bairro, String uf, String cep) {
         this.idEndereco = idEndereco;
         this.logradouro = logradouro;
         this.cidade = cidade;
@@ -27,11 +34,11 @@ public class Endereco {
         this.cep = cep;
     }
 
-    public int getIdEndereco() {
+    public Integer getIdEndereco() {
         return idEndereco;
     }
 
-    public void setIdEndereco(int idEndereco) {
+    public void setIdEndereco(Integer idEndereco) {
         this.idEndereco = idEndereco;
     }
     
@@ -73,26 +80,25 @@ public class Endereco {
 
     public void setCep(String cep) {
         this.cep = cep;
-    }
+    }    
     
     public static Endereco obterEndereco (int idEndereco) throws SQLException, ClassNotFoundException{
-        return EnderecoDAO.obterEndereco(idEndereco);
-    }
+        return EnderecoDAO.getInstancia().findEndereco(idEndereco);
+}
     
     public static List<Endereco> obterEnderecos() throws ClassNotFoundException, SQLException{
-        return EnderecoDAO.obterEnderecos();
+        return EnderecoDAO.getInstancia().findAllEnderecos();
     }
     
     public void gravar() throws SQLException, ClassNotFoundException {
-        EnderecoDAO.gravar(this);
+        EnderecoDAO.getInstancia().save(this);
     }
     
     public void excluir() throws ClassNotFoundException, SQLException{
-        EnderecoDAO.excluir(this);
+        EnderecoDAO.getInstancia().remove(idEndereco);
     }
     
     public void alterar() throws ClassNotFoundException, SQLException {
-        EnderecoDAO.alterar(this);
+        EnderecoDAO.getInstancia().save(this);
     }
-    
 }

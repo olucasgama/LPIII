@@ -3,11 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/lucas/Documents/BSI/LP%20III/LPIII/SGMC/web/manterRelatorioCliente.jsp</file>
-            <file>file:/C:/Users/lucas/Documents/BSI/LP%20III/LPIII/SGMC/src/java/controller/PesquisaCategoriaController.java</file>
-            <file>file:/C:/Users/lucas/Documents/BSI/LP%20III/LPIII/SGMC/web/manterRelatorioProduto.jsp</file>
-            <file>file:/C:/Users/lucas/Documents/BSI/LP%20III/LPIII/SGMC/src/java/controller/RelClientesController.java</file>
-            <file>file:/C:/Users/lucas/Documents/BSI/LP%20III/LPIII/SGMC/src/java/controller/RelProdutosController.java</file>
+            <file>file:/C:/Users/lucas/Documents/BSI/LPIII/LPIII/src/java/dao/ClienteDAO.java</file>
+            <file>file:/C:/Users/lucas/Documents/BSI/LPIII/LPIII/src/java/model/Cliente.java</file>
+            <file>file:/C:/Users/lucas/Documents/BSI/LPIII/LPIII/src/java/model/Endereco.java</file>
         </group>
     </open-files>
 </project-private>
