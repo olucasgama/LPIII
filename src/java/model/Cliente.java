@@ -6,12 +6,20 @@
 package model;
 
 import dao.ClienteDAO;
+import javax.persistence.Id;
 import java.sql.SQLException;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import dao.EnderecoDAO;
 import java.util.List;
 
+@Entity
 public class Cliente {
 
-    private int idCliente;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idCliente;
     private String cnpj;
     private String razaoSocial;
     private String inscricaoEstadual;
@@ -29,7 +37,7 @@ public class Cliente {
     private Endereco endereco;
     private int idEndereco;
 
-    public Cliente(int idCliente, String cnpj, String razaoSocial, String inscricaoEstadual, String nome, String cpf, String rg, String telefone, String celular, String email, String dataNascimento, String estadoCivil, String sexo, int numero, String complemento, Endereco endereco) {
+    public Cliente(Integer idCliente, String cnpj, String razaoSocial, String inscricaoEstadual, String nome, String cpf, String rg, String telefone, String celular, String email, String dataNascimento, String estadoCivil, String sexo, int numero, String complemento, Endereco endereco) {
         this.idCliente = idCliente;
         this.cnpj = cnpj;
         this.razaoSocial = razaoSocial;
@@ -47,7 +55,7 @@ public class Cliente {
         this.complemento = complemento;
         this.endereco = endereco;
     }
-    
+
     public int getNumero() {
         return numero;
     }
@@ -63,12 +71,12 @@ public class Cliente {
     public void setComplemento(String complemento) {
         this.complemento = complemento;
     }
-    
-    public int getIdCliente() {
+
+    public Integer getIdCliente() {
         return idCliente;
     }
 
-    public void setIdCliente(int idCliente) {
+    public void setIdCliente(Integer idCliente) {
         this.idCliente = idCliente;
     }
 
@@ -167,20 +175,12 @@ public class Cliente {
     public void setSexo(String sexo) {
         this.sexo = sexo;
     }
-   
-    public Endereco getEndereco() throws ClassNotFoundException, SQLException{
-        if((this.idEndereco !=0) && (this.endereco == null)){
-            this.endereco = Endereco.obterEndereco(this.idEndereco);
+
+    public Endereco getEndereco() throws ClassNotFoundException, SQLException {
+        if ((this.idEndereco != 0) && (this.endereco == null)) {
+            this.endereco = EnderecoDAO.getInstancia().findEndereco(idEndereco);
         }
         return endereco;
-    }
-    
-    public static Cliente obterCliente (int idCliente) throws SQLException, ClassNotFoundException{
-        return ClienteDAO.obterCliente(idCliente);
-    }
-    
-    public static List<Cliente> obterClientes() throws ClassNotFoundException, SQLException{
-        return ClienteDAO.obterClientes();
     }
 
     public void setEndereco(Endereco endereco) {
@@ -195,14 +195,22 @@ public class Cliente {
         this.idEndereco = idEndereco;
     }
     
-    public void gravar() throws SQLException, ClassNotFoundException {
-        ClienteDAO.gravar(this);
+    public static Cliente obterCliente (int idCliente) throws SQLException, ClassNotFoundException{
+        return ClienteDAO.getInstancia().findCliente(idCliente);
     }
     
+    public static List<Cliente> obterClientes() throws ClassNotFoundException, SQLException{
+        return ClienteDAO.getInstancia().findAllClientes();
+    }
+
     public void excluir() throws ClassNotFoundException, SQLException{
-        ClienteDAO.excluir(this);
+        ClienteDAO.getInstancia().remove(idCliente);
     }
     public void alterar() throws ClassNotFoundException, SQLException{
-        ClienteDAO.alterar(this);
+        ClienteDAO.getInstancia().save(this);
+    }
+    
+    public void gravar() throws ClassNotFoundException, SQLException{
+        ClienteDAO.getInstancia().save(this);
     }
 }

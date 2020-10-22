@@ -9,10 +9,17 @@ import dao.ItensVendaDAO;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity
 public class ItemVenda {
 
-    private int idItemVenda;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idItemVenda;
     private int quantidade;
     private float precoUnitario;
     private Venda venda;
@@ -20,7 +27,7 @@ public class ItemVenda {
     private Produto produto;
     private int idProduto;
 
-    public ItemVenda(int idItemVenda, int quantidade, float precoUnitario,
+    public ItemVenda(Integer idItemVenda, int quantidade, float precoUnitario,
             Venda venda, Produto produto) {
         this.idItemVenda = idItemVenda;
         this.quantidade = quantidade;
@@ -29,11 +36,11 @@ public class ItemVenda {
         this.produto = produto;
     }
 
-    public int getIdItensVenda() {
+    public Integer getIdItensVenda() {
         return idItemVenda;
     }
 
-    public void setIdItensVenda(int idItemVenda) {
+    public void setIdItensVenda(Integer idItemVenda) {
         this.idItemVenda = idItemVenda;
     }
 
@@ -91,27 +98,27 @@ public class ItemVenda {
         this.idProduto = idProduto;
     }
 
-    public static ArrayList<ItemVenda> obterItensVenda(int idVenda) throws SQLException, ClassNotFoundException {
-        return ItensVendaDAO.obterItensVenda(idVenda);
+    public static List<ItemVenda> obterItensVenda(int idVenda) throws SQLException, ClassNotFoundException {
+        return ItensVendaDAO.getInstancia().findAllItensVenda();
     }
 
-    public static ArrayList<ItemVenda> obterItensVendas() throws ClassNotFoundException, SQLException {
-        return ItensVendaDAO.obterItensVendas();
+    public static List<ItemVenda> obterItensVendas() throws ClassNotFoundException, SQLException {
+        return ItensVendaDAO.getInstancia().findAllItensVenda();
     }
 
-    public static ItemVenda obterItemVenda(int idItensVenda) throws ClassNotFoundException, SQLException {
-        return ItensVendaDAO.obterItemVenda(idItensVenda);
-    }
+//    public static ItemVenda obterItemVenda(int idItensVenda) throws ClassNotFoundException, SQLException {
+//        return ItensVendaDAO.getInstancia().findItemVenda(idItemVenda);
+//    }
 
     public void gravar() throws SQLException, ClassNotFoundException {
-        ItensVendaDAO.gravar(this);
+        ItensVendaDAO.getInstancia().save(this);
     }
 
     public void excluir() throws ClassNotFoundException, SQLException {
-        ItensVendaDAO.excluir(this);
+        ItensVendaDAO.getInstancia().remove(this);
     }
 
     public void alterar() throws SQLException, ClassNotFoundException {
-        ItensVendaDAO.alterar(this);
+        ItensVendaDAO.getInstancia().save(this);
     }
 }

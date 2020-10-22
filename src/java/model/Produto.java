@@ -8,10 +8,17 @@ package model;
 import dao.ProdutoDAO;
 import java.sql.SQLException;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity
 public class Produto {
-
-    private int idProduto;
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idProduto;
     private String nome;
     private int codInterno;
     private int codBarra;
@@ -30,7 +37,7 @@ public class Produto {
     private int idFornecedor;
     private int idCategoria;
 
-    public Produto(int idProduto, String nome, int codInterno, int codBarra, 
+    public Produto(Integer idProduto, String nome, int codInterno, int codBarra, 
             String unidadeMedida, float precoCompra, float peso, float altura, 
             float comprimento, String validade, int qtdMinima, int qtdAtual, 
             int qtdMaxima, float largura, Fornecedor fornecedor, Categoria categoria) {
@@ -60,11 +67,11 @@ public class Produto {
         this.largura = largura;
     }
     
-    public int getIdProduto() {
+    public Integer getIdProduto() {
         return idProduto;
     }
 
-    public void setIdProduto(int idProduto) {
+    public void setIdProduto(Integer idProduto) {
         this.idProduto = idProduto;
     }
 
@@ -203,22 +210,22 @@ public class Produto {
     }
     
     public static Produto obterProduto (int idProduto) throws SQLException, ClassNotFoundException{
-        return ProdutoDAO.obterProduto(idProduto);
+        return ProdutoDAO.getInstancia().findProduto(idProduto);
     }
     
     public static List<Produto> obterProdutos() throws ClassNotFoundException, SQLException{
-        return ProdutoDAO.obterProdutos();
+        return ProdutoDAO.getInstancia().findAllProdutos();
     }
     
     public void gravar() throws ClassNotFoundException, SQLException{
-        ProdutoDAO.gravar(this);
+        ProdutoDAO.getInstancia().save(this);
     }
     
     public void alterar() throws ClassNotFoundException, SQLException{
-        ProdutoDAO.alterar(this);
+        ProdutoDAO.getInstancia().save(this);
     }
     
     public void excluir() throws ClassNotFoundException, SQLException {
-        ProdutoDAO.excluir(this);
+        ProdutoDAO.getInstancia().remove(idProduto);
     }
 }

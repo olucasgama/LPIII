@@ -8,28 +8,35 @@ package model;
 import dao.PerdaDevolucaoDAO;
 import java.sql.SQLException;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity
 public class PerdaDevolucao {
     
-    private int idPerdaDevolucao;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idPerdaDevolucao;
     private String tipo;
     private Produto produto;
     private Venda venda;
     private int idProduto;
     private int idVenda;
 
-    public PerdaDevolucao(int idPerdaDevolucao, String tipo, Produto produto, Venda venda) {
+    public PerdaDevolucao(Integer idPerdaDevolucao, String tipo, Produto produto, Venda venda) {
         this.idPerdaDevolucao = idPerdaDevolucao;
         this.tipo = tipo;
         this.produto = produto;
         this.venda = venda;
     }
 
-    public int getIdPerdaDevolucao() {
+    public Integer getIdPerdaDevolucao() {
         return idPerdaDevolucao;
     }
 
-    public void setIdPerdaDevolucao(int idPerdaDevolucao) {
+    public void setIdPerdaDevolucao(Integer idPerdaDevolucao) {
         this.idPerdaDevolucao = idPerdaDevolucao;
     }
 
@@ -80,22 +87,22 @@ public class PerdaDevolucao {
     }
 
     public static PerdaDevolucao obterPerdaDevolucao (int idPerdaDevolucao) throws SQLException, ClassNotFoundException{
-        return PerdaDevolucaoDAO.obterPerdaDevolucao(idPerdaDevolucao);
+        return PerdaDevolucaoDAO.getInstancia().findPerdaDevolucao(idPerdaDevolucao);
     }
     
     public static List<PerdaDevolucao> obterPerdaDevolucoes() throws ClassNotFoundException, SQLException{
-        return PerdaDevolucaoDAO.obterPerdaDevolucoes();
+        return PerdaDevolucaoDAO.getInstancia().findAllPerdaDevolucoes();
     }
     
     public void gravar() throws ClassNotFoundException, SQLException{
-        PerdaDevolucaoDAO.gravar(this);
+        PerdaDevolucaoDAO.getInstancia().save(this);
     }
     
     public void excluir() throws ClassNotFoundException, SQLException {
-        PerdaDevolucaoDAO.excluir(this);
+        PerdaDevolucaoDAO.getInstancia().remove(idPerdaDevolucao);
     }
     
     public void alterar() throws ClassNotFoundException, SQLException{
-        PerdaDevolucaoDAO.alterar(this);
+        PerdaDevolucaoDAO.getInstancia().save(this);
     }
 }

@@ -8,11 +8,17 @@ package model;
 import dao.VendaDAO;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity
 public class Venda {
     
-    private int idVenda;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idVenda;
     private String dataVenda;
     private float subTotal;
     private int codBarra;
@@ -26,7 +32,7 @@ public class Venda {
     private int idCliente;
  
 
-    public Venda(int idVenda, String dataVenda, float subTotal, int codBarra, 
+    public Venda(Integer idVenda, String dataVenda, float subTotal, int codBarra, 
             float valorDesconto, String situacao, Usuario usuario, 
             FormaPagamento formaPagamento, Cliente cliente) {
         this.idVenda = idVenda;
@@ -40,11 +46,11 @@ public class Venda {
         this.cliente = cliente;
     }
 
-    public int getIdVenda() {
+    public Integer getIdVenda() {
         return idVenda;
     }
 
-    public void setIdVenda(int idVenda) {
+    public void setIdVenda(Integer idVenda) {
         this.idVenda = idVenda;
     }
 
@@ -146,22 +152,22 @@ public class Venda {
     }
 
     public static Venda obterVenda (int idVenda) throws SQLException, ClassNotFoundException{
-        return VendaDAO.obterVenda(idVenda);
+        return VendaDAO.getInstancia().findVenda(idVenda);
     }
     
     public static ArrayList<Venda> obterVendas() throws ClassNotFoundException, SQLException{
-        return (ArrayList<Venda>) VendaDAO.obterVendas();
+        return (ArrayList<Venda>) VendaDAO.getInstancia().findAllVendas();
     }
     
     public void gravar() throws ClassNotFoundException, SQLException{
-        VendaDAO.gravar(this);
+        VendaDAO.getInstancia().save(this);
     }
     
     public void alterar() throws ClassNotFoundException, SQLException{
-        VendaDAO.alterar(this);
+        VendaDAO.getInstancia().save(this);
     }
     
     public void excluir() throws ClassNotFoundException, SQLException {
-        VendaDAO.excluir(this);
+        VendaDAO.getInstancia().remove(idVenda);
     }
 }

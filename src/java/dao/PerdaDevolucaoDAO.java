@@ -5,143 +5,81 @@
  */
 package dao;
 
-import static dao.DAO.fecharConexao;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
+import javax.persistence.EntityManager;
 import java.util.List;
 import model.PerdaDevolucao;
 
 public class PerdaDevolucaoDAO {
 
-    public static List<PerdaDevolucao> obterPerdaDevolucoes() throws ClassNotFoundException, SQLException {
+    private static PerdaDevolucaoDAO instancia = new PerdaDevolucaoDAO();
 
-        Connection conexao = null;
-        Statement comando = null;
-        List<PerdaDevolucao> perdas = new java.util.ArrayList<PerdaDevolucao>();
-        PerdaDevolucao perdaDevolucao = null;
-
-        try {
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            ResultSet rs = comando.executeQuery("select * from perdaDevolucao");
-
-            while (rs.next()) {
-                perdaDevolucao = instanciarPerdaDevolucao(rs);
-                perdas.add(perdaDevolucao);
-            }
-        } finally {
-            fecharConexao(conexao, comando);
-        }
-        return perdas;
+    public static PerdaDevolucaoDAO getInstancia() {
+        return instancia;
+    }
+    
+    private PerdaDevolucaoDAO(){
+        
     }
 
-    public static PerdaDevolucao obterPerdaDevolucao(int idPerdaDevolucao) throws SQLException, ClassNotFoundException {
-
-        Connection conexao = null;
-        Statement comando = null;
-        PerdaDevolucao perdaDevolucao = null;
+    public PerdaDevolucao save(PerdaDevolucao perdaDevolucao) {
+        EntityManager em = new ConexaoFactory().getConexao();
         try {
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            ResultSet rs = comando.executeQuery("select * from "
-                    + "perdaDevolucao where idPerdaDevolucao = "
-                    + idPerdaDevolucao);
-            rs.first();
-            perdaDevolucao = instanciarPerdaDevolucao(rs);
+            em.getTransaction().begin();
+            if (perdaDevolucao.getIdPerdaDevolucao() == null) {
+                em.persist(perdaDevolucao);
+            } else {
+                em.merge(perdaDevolucao);
+            }
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            System.err.println(e);
         } finally {
-            fecharConexao(conexao, comando);
+            em.close();
         }
         return perdaDevolucao;
     }
 
-    private static PerdaDevolucao instanciarPerdaDevolucao(ResultSet rs) throws SQLException {
-        PerdaDevolucao perdaDevolucao = new PerdaDevolucao(rs.getInt("idPerdaDevolucao"),
-                rs.getString("tipo"),
-                null,
-                null);
-        perdaDevolucao.setIdVenda(rs.getInt("idVenda"));
-        perdaDevolucao.setIdProduto(rs.getInt("idProduto"));
+    public List<PerdaDevolucao> findAllPerdaDevolucoes() {
+        EntityManager em = new ConexaoFactory().getConexao();
+        List<PerdaDevolucao> perdaDevolucoes = null;
+        try {
+            perdaDevolucoes = em.createQuery("from perdaDevolucao p").getResultList();
+        } catch (Exception e) {
+            System.err.println(e);
+        } finally {
+            em.close();
+        }
+        return perdaDevolucoes;
+    }
+
+    public PerdaDevolucao findPerdaDevolucao(Integer idPerdaDevolucao) {
+        EntityManager em = new ConexaoFactory().getConexao();
+        PerdaDevolucao perdaDevolucao = null;
+        try {
+            perdaDevolucao = em.find(PerdaDevolucao.class, idPerdaDevolucao);
+        } catch (Exception e) {
+            System.err.println(e);
+        } finally {
+            em.close();
+        }
         return perdaDevolucao;
     }
 
-    public static void gravar(PerdaDevolucao perdaDevolucao) throws ClassNotFoundException, SQLException {
-        Connection conexao = null;
-        PreparedStatement comando = null;
+    public PerdaDevolucao remove(Integer idPerdaDevolucao) {
+        EntityManager em = new ConexaoFactory().getConexao();
+        PerdaDevolucao perdaDevolucao = null;
         try {
-            conexao = BD.getConexao();
-            comando = conexao.prepareStatement(
-                    "insert into perdaDevolucao (idPerdaDevolucao, tipo, "
-                    + "idVenda, idProduto) values (?,?,?,?)");
-            comando.setInt(1, perdaDevolucao.getIdPerdaDevolucao());
-            comando.setString(2, perdaDevolucao.getTipo());
-            if (perdaDevolucao.getVenda() == null) {
-                comando.setNull(3, Types.INTEGER);
-            } else {
-                comando.setInt(3, perdaDevolucao.getVenda().getIdVenda());
-            }
-            if (perdaDevolucao.getVenda() == null) {
-                comando.setNull(4, Types.INTEGER);
-            } else {
-                comando.setInt(4, perdaDevolucao.getProduto().getIdProduto());
-            }
-            comando.executeUpdate();
+            perdaDevolucao = em.find(PerdaDevolucao.class, idPerdaDevolucao);
+            em.getTransaction().begin();
+            em.remove(perdaDevolucao);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            System.err.println(e);
         } finally {
-            fecharConexao(conexao, comando);
+            em.close();
         }
-    }
-
-    public static void excluir(PerdaDevolucao perdaDevolucao) throws ClassNotFoundException,
-            SQLException {
-        Connection conexao = null;
-        Statement comando = null;
-        String stringSQL;
-
-        try {
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            stringSQL = "delete from perdaDevolucao where idPerdaDevolucao = "
-                    + perdaDevolucao.getIdPerdaDevolucao();
-            comando.execute(stringSQL);
-        } finally {
-            fecharConexao(conexao, comando);
-        }
-    }
-
-    public static void alterar(PerdaDevolucao perdaDevolucao) throws ClassNotFoundException, SQLException {
-
-        Connection conexao = null;
-        Statement comando = null;
-        String stringSQL;
-
-        try {
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            stringSQL = "update perdaDevolucao set "
-                    + "tipo='" + perdaDevolucao.getTipo() + "',"
-                    + "idVenda = ";
-            if (perdaDevolucao.getVenda() == null) {
-                stringSQL = stringSQL + null;
-            } else {
-                stringSQL = stringSQL + perdaDevolucao.getVenda().getIdVenda();
-            }
-            stringSQL = stringSQL + " where idPerdaDevolucao = " + perdaDevolucao.getIdPerdaDevolucao();
-            comando.execute(stringSQL);
-            
-            stringSQL = "update perdaDevolucao set "
-                    + "idProduto = ";
-            if (perdaDevolucao.getProduto() == null) {
-                stringSQL = stringSQL + null;
-            } else {
-                stringSQL = stringSQL + perdaDevolucao.getProduto().getIdProduto();
-            }
-            stringSQL = stringSQL + " where idPerdaDevolucao = " + perdaDevolucao.getIdPerdaDevolucao();
-            comando.execute(stringSQL);
-        } finally {
-            fecharConexao(conexao, comando);
-        }
+        return perdaDevolucao;
     }
 }
