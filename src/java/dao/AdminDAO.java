@@ -5,138 +5,82 @@
  */
 package dao;
 
-import static dao.DAO.fecharConexao;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManager;
 import model.Admin;
-import model.Usuario;
 
 public class AdminDAO {
 
-    public static List<Admin> obterAdmins() throws ClassNotFoundException, SQLException {
+    private static AdminDAO instancia = new AdminDAO();
 
-        Connection conexao = null;
-        Statement comando = null;
-        List<Admin> admins = new ArrayList<Admin>();
-        Admin admin = null;
+    public static AdminDAO getInstancia() {
+        return instancia;
+    }
 
+    private AdminDAO() {
+
+    }
+
+    public Admin save(Admin admin) {
+        EntityManager em = new ConexaoFactory().getConexao();
         try {
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            ResultSet rs = comando.executeQuery("select * from admin join usuario"
-                    + " on admin.idUsuario=usuario.idUsuario");
-
-            while (rs.next()) {
-                admin = instaciarAdmin(rs);
-                admins.add(admin);
+            em.getTransaction().begin();
+            if (admin.getIdAdmin() == null) {
+                em.persist(admin);
+            } else {
+                em.merge(admin);
             }
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            System.err.println(e);
         } finally {
-            fecharConexao(conexao, comando);
+            em.close();
+        }
+        return admin;
+    }
 
+    public List<Admin> findAllAdmins() {
+        EntityManager em = new ConexaoFactory().getConexao();
+        List<Admin> admins = null;
+        try {
+            admins = em.createQuery("from admin c").getResultList();
+        } catch (Exception e) {
+            System.err.println(e);
+        } finally {
+            em.close();
         }
         return admins;
     }
 
-    public static Admin obterAdmin(int idAdmin) throws SQLException, ClassNotFoundException {
-
-        Connection conexao = null;
-        Statement comando = null;
+    public Admin findAdmin(Integer idAdmin) {
+        EntityManager em = new ConexaoFactory().getConexao();
         Admin admin = null;
         try {
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            ResultSet rs = comando.executeQuery("select * from admin join"
-                    + " usuario on admin.idUsuario=usuario.idUsuario"
-                    + " where idAdmin = " + idAdmin);
-            rs.first();
-            admin = instaciarAdmin(rs);
+            admin = em.find(Admin.class, idAdmin);
+        } catch (Exception e) {
+            System.err.println(e);
         } finally {
-            fecharConexao(conexao, comando);
+            em.close();
         }
         return admin;
     }
 
-    private static Admin instaciarAdmin(ResultSet rs) throws SQLException {
-
-        Admin admin = new Admin(rs.getInt("idAdmin"),
-                rs.getInt("idUsuario"),
-                rs.getString("nome"),
-                rs.getString("email"),
-                rs.getString("senha"));
-
+    public Admin remove(Integer idAdmin) {
+        EntityManager em = new ConexaoFactory().getConexao();
+        Admin admin = null;
+        try {
+            admin = em.find(Admin.class, idAdmin);
+            em.getTransaction().begin();
+            em.remove(admin);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            System.err.println(e);
+        } finally {
+            em.close();
+        }
         return admin;
     }
 
-    public static void gravar(Admin admin, Usuario usuario) throws ClassNotFoundException, SQLException {
-        Connection conexao = null;
-        PreparedStatement comando = null;
-
-        try {
-            conexao = BD.getConexao();
-            comando = conexao.prepareStatement(
-                    "insert into usuario (idUsuario, nome, email, senha)"
-                    + " values (?,?,?,?)");
-            comando.setInt(1, usuario.getIdUsuario());
-            comando.setString(2, usuario.getNome());
-            comando.setString(3, usuario.getEmail());
-            comando.setString(4, usuario.getSenha());
-            comando.executeUpdate();
-        } finally {
-            fecharConexao(conexao, comando);
-        }
-
-        try {
-            conexao = BD.getConexao();
-            comando = conexao.prepareStatement(
-                    "insert into admin (idAdmin, idUsuario) values (?,?)");
-            comando.setInt(1, admin.getIdAdmin());
-            comando.setInt(2, admin.getIdUsuario());
-            comando.executeUpdate();
-        } finally {
-            fecharConexao(conexao, comando);
-        }
-    }
-
-    public static void excluir(Admin admin)
-            throws ClassNotFoundException, SQLException {
-        Connection conexao = null;
-        Statement comando = null;
-        String stringSQL;
-        try {
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            stringSQL = "delete from admin where idAdmin = " + admin.getIdAdmin();
-            comando.execute(stringSQL);
-            stringSQL = "delete from usuario where idUsuario = " + admin.getIdUsuario();
-            comando.execute(stringSQL);
-        } finally {
-            fecharConexao(conexao, comando);
-        }
-    }
-
-    public static void alterar(Admin admin) throws ClassNotFoundException, SQLException {
-
-        Connection conexao = null;
-        Statement comando = null;
-        String stringSQL;  
-            try {
-                conexao = BD.getConexao();
-                comando = conexao.createStatement();
-
-                stringSQL = "update usuario set "
-                        + "nome ='" + admin.getNome() + "',"
-                        + "email='" + admin.getEmail() + "',"
-                        + "senha='" + admin.getSenha() + "' ";
-
-                stringSQL = stringSQL + " where idUsuario = " + admin.getIdUsuario();
-                comando.execute(stringSQL);
-            } finally {
-                fecharConexao(conexao, comando);
-            }
-        }
-    }
+}

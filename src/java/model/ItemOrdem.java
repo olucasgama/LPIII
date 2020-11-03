@@ -9,17 +9,24 @@ import dao.ItensOrdemDAO;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity
 public class ItemOrdem {
 
-    private int idItemOrdem;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idItemOrdem;
     private int quantidade;
     private Produto produto;
     private int idProduto;
     private OrdemServico ordemServico;
     private int idOrdemSrv;
 
-    public ItemOrdem(int idItensOrdem, int quantidade, Produto produto,
+    public ItemOrdem(Integer idItensOrdem, int quantidade, Produto produto,
             OrdemServico ordemServico) {
         this.idItemOrdem = idItensOrdem;
         this.quantidade = quantidade;
@@ -27,11 +34,11 @@ public class ItemOrdem {
         this.ordemServico = ordemServico;
     }
 
-    public int getIdItensOrdem() {
+    public Integer getIdItensOrdem() {
         return idItemOrdem;
     }
 
-    public void setIdItensOrdem(int idItemOrdem) {
+    public void setIdItensOrdem(Integer idItemOrdem) {
         this.idItemOrdem = idItemOrdem;
     }
 
@@ -73,7 +80,7 @@ public class ItemOrdem {
         this.ordemServico = ordemServico;
     }
 
-    public int getIdOrdemSrv() {
+    public Integer getIdOrdemSrv() {
         return idOrdemSrv;
     }
 
@@ -81,27 +88,27 @@ public class ItemOrdem {
         this.idOrdemSrv = idOrdemSrv;
     }
 
-    public static ArrayList<ItemOrdem> obterItensOrdem(int idItensOrdem) throws SQLException, ClassNotFoundException {
-        return ItensOrdemDAO.obterItensOrdem(idItensOrdem);
+    public static List<ItemOrdem> obterItensOrdem(int idItensOrdem) throws SQLException, ClassNotFoundException {
+        return ItensOrdemDAO.getInstancia().findAllItemOrdems();
     }
 
-    public static ArrayList<ItemOrdem> obterItensOrdens() throws ClassNotFoundException, SQLException {
-        return ItensOrdemDAO.obterItensOrdens();
+    public static List<ItemOrdem> obterItensOrdens() throws ClassNotFoundException, SQLException {
+        return ItensOrdemDAO.getInstancia().findAllItemOrdems();
     }
     
-    public static ItemOrdem obterItemOrdem(int idItensOrdem) throws ClassNotFoundException, SQLException {
-        return ItensOrdemDAO.obterItemOrdem(idItensOrdem);
+    public static ItemOrdem obterItemOrdem(Integer idItensOrdem) throws ClassNotFoundException, SQLException {
+        return ItensOrdemDAO.findItemOrdem(idItensOrdem);
     }
 
     public void gravar() throws SQLException, ClassNotFoundException {
-        ItensOrdemDAO.gravar(this);
+        ItensOrdemDAO.getInstancia().save(this);
     }
     
     public void alterar() throws ClassNotFoundException, SQLException{
-        ItensOrdemDAO.alterar(this);
+        ItensOrdemDAO.getInstancia().save(this);
     }
     
     public void excluir() throws ClassNotFoundException, SQLException{
-        ItensOrdemDAO.excluir(this);
+        ItensOrdemDAO.getInstancia().remove(idItemOrdem);
     }
 }

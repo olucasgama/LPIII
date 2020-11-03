@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Colaborador extends Usuario {
 
-    private int idColaborador;
+    private Integer idColaborador;
     private String cpf;
     private String rg;
     private String dataNascimento;
@@ -61,7 +61,7 @@ public class Colaborador extends Usuario {
     
     
 
-    public int getIdColaborador() {
+    public Integer getIdColaborador() {
         return idColaborador;
     }
 
@@ -143,28 +143,27 @@ public class Colaborador extends Usuario {
     public void setIdEndereco(int idEndereco) {
         this.idEndereco = idEndereco;
     }
+    
+    public static Colaborador obterColaborador(int idColaborador) throws SQLException, ClassNotFoundException {
+        return ColaboradorDAO.getInstancia().findColaborador(idColaborador);
+    }
 
-    public static Colaborador obterColaborador (int idColaborador) throws SQLException, ClassNotFoundException{
-        return ColaboradorDAO.obterColaborador(idColaborador);
+    public static List<Colaborador> obterColaboradores() throws ClassNotFoundException, SQLException {
+        return ColaboradorDAO.getInstancia().findAllColaboradors();
     }
-    
-    public static List<Colaborador> obterColaboradores() throws ClassNotFoundException, SQLException{
-        return ColaboradorDAO.obterColaboradores();
-    }
-    
- 
+
     @Override
     public void gravar() throws SQLException, ClassNotFoundException {
-        ColaboradorDAO.gravar(this, this);
+        ColaboradorDAO.getInstancia().save(this);
     }
-    
+
     @Override
-    public void excluir() throws ClassNotFoundException, SQLException{
-        ColaboradorDAO.excluir(this);
+    public void excluir() throws ClassNotFoundException, SQLException {
+        ColaboradorDAO.getInstancia().remove(idColaborador);
     }
-    
+
     @Override
-    public void alterar() throws ClassNotFoundException, SQLException{
-        ColaboradorDAO.alterar(this);
+    public void alterar() throws ClassNotFoundException, SQLException {
+        ColaboradorDAO.getInstancia().save(this);
     }
 }

@@ -8,18 +8,26 @@ package model;
 import dao.CategoriaDAO;
 import java.sql.SQLException;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+
+@Entity
 public class Categoria {
     
-    private int idCategoria;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idCategoria;
     private String descricao;
 
-    public Categoria(int idCategoria, String descricao) {
+    public Categoria(Integer idCategoria, String descricao) {
         this.idCategoria = idCategoria;
         this.descricao = descricao;
     }
 
-    public int getIdCategoria() {
+    public Integer getIdCategoria() {
         return idCategoria;
     }
 
@@ -36,22 +44,22 @@ public class Categoria {
     }
     
     public static Categoria obterCategoria (int idCategoria) throws SQLException, ClassNotFoundException{
-        return CategoriaDAO.obterCategoria(idCategoria);
+        return CategoriaDAO.getInstancia().findCategoria(idCategoria);
     }
     
     public static List<Categoria> obterCategorias() throws ClassNotFoundException, SQLException{
-        return CategoriaDAO.obterCategorias();
+        return CategoriaDAO.getInstancia().findAllCategorias();
     }
     
     public void gravar() throws SQLException, ClassNotFoundException {
-        CategoriaDAO.gravar(this);
+        CategoriaDAO.getInstancia().save(this);
     }
     
     public void excluir() throws ClassNotFoundException, SQLException{
-        CategoriaDAO.excluir(this);
+        CategoriaDAO.getInstancia().remove(idCategoria);
     }
     
     public void alterar() throws ClassNotFoundException, SQLException{
-        CategoriaDAO.alterar(this);
+        CategoriaDAO.getInstancia().save(this);
     }
 }

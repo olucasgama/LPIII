@@ -5,161 +5,81 @@
  */
 package dao;
 
-import static dao.DAO.fecharConexao;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManager;
 import model.ItemOrdem;
 
 public class ItensOrdemDAO {
 
-    public static ArrayList<ItemOrdem> obterItensOrdens()
-            throws ClassNotFoundException, SQLException {
+    private static ItensOrdemDAO instancia = new ItensOrdemDAO();
 
-        Connection conexao = null;
-        Statement comando = null;
-        ArrayList<ItemOrdem> itensOrdens = new java.util.ArrayList<ItemOrdem>();
-        ItemOrdem itensOrdem = null;
-
-        try {
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            ResultSet rs = comando.executeQuery("select * from itensOrdem "
-                    + "join ordemServico on itensOrdem.idOrdemSrv = ordemServico.idOrdemSrv");
-
-            while (rs.next()) {
-                itensOrdem = instaciarItensOrdem(rs);
-                itensOrdens.add(itensOrdem);
-            }
-        } finally {
-            fecharConexao(conexao, comando);
-
-        }
-        return itensOrdens;
-    }
-
-    public static ArrayList<ItemOrdem> obterItensOrdem(int idOrdemSrv) throws SQLException, ClassNotFoundException {
-
-        Connection conexao = null;
-        Statement comando = null;
-        ArrayList<ItemOrdem> itensOrdens = new java.util.ArrayList<ItemOrdem>();
-        ItemOrdem itensOrdem = null;
-        try {
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            ResultSet rs = comando.executeQuery("select * from itensOrdem "
-                    + "join ordemServico on itensOrdem.idOrdemSrv = ordemServico.idOrdemSrv "
-                    + "where ordemServico.idOrdemSrv = " + idOrdemSrv);
-            while (rs.next()) {
-                itensOrdem = instaciarItensOrdem(rs);
-                itensOrdens.add(itensOrdem);
-            }
-        } finally {
-            fecharConexao(conexao, comando);
-        }
-        return itensOrdens;
+    public static ItensOrdemDAO getInstancia() {
+        return instancia;
     }
     
-    public static ItemOrdem obterItemOrdem(int idItensOrdem) throws ClassNotFoundException, SQLException {
-        Connection conexao = null;
-        Statement comando = null;
-        ItemOrdem itemOrdem = null;
-        try {
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            ResultSet rs = comando.executeQuery("select * from itensOrdem where"
-                    + " itensOrdem.idItensOrdem = " + idItensOrdem);
-            rs.first();
-            itemOrdem = instaciarItensOrdem(rs);
-        } finally {
-            fecharConexao(conexao, comando);
+    private ItensOrdemDAO(){
+        
+    }
 
+    public ItemOrdem save(ItemOrdem itemOrdem) {
+        EntityManager em = new ConexaoFactory().getConexao();
+        try {
+            em.getTransaction().begin();
+            if (itemOrdem.getIdItensOrdem() == null) {
+                em.persist(itemOrdem);
+            } else {
+                em.merge(itemOrdem);
+            }
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            System.err.println(e);
+        } finally {
+            em.close();
         }
         return itemOrdem;
     }
 
-    private static ItemOrdem instaciarItensOrdem(ResultSet rs) throws SQLException {
-        ItemOrdem itensOrdem = new ItemOrdem(rs.getInt("idItensOrdem"),
-                rs.getInt("quantidade"),
-                null,
-                null);
-        itensOrdem.setIdProduto(rs.getInt("idProduto"));
-        itensOrdem.setIdOrdemSrv(rs.getInt("idOrdemSrv"));
-
+    public List<ItemOrdem> findAllItemOrdems() {
+        EntityManager em = new ConexaoFactory().getConexao();
+        List<ItemOrdem> itensOrdem = null;
+        try {
+            itensOrdem = em.createQuery("from itensOrdem i").getResultList();
+        } catch (Exception e) {
+            System.err.println(e);
+        } finally {
+            em.close();
+        }
         return itensOrdem;
     }
-    
-    public static void gravar(ItemOrdem itensOrdem) throws SQLException, ClassNotFoundException{
-        Connection conexao = null;
-        PreparedStatement comando = null;
-        
-        try{
-            conexao = BD.getConexao();
-            comando = conexao.prepareStatement("insert into itensOrdem"
-                    + " (idItensOrdem, quantidade, idProduto, idOrdemSrv) "
-                    + "values (?,?,?,?)");
-            comando.setInt(1, itensOrdem.getIdItensOrdem());
-            comando.setInt(2, itensOrdem.getQuantidade());
-            
-            if(itensOrdem.getProduto()== null){
-                comando.setNull(3, Types.INTEGER);
-            }else{
-                comando.setInt(3, itensOrdem.getProduto().getIdProduto());
-            }
-            
-            if(itensOrdem.getOrdemServico() == null){
-                comando.setNull(4, Types.INTEGER);
-            }else{
-                comando.setInt(4, itensOrdem.getOrdemServico().getIdOrdemSrv());
-            }         
-            comando.executeUpdate();
+
+    public static ItemOrdem findItemOrdem(Integer idItemOrdem) {
+        EntityManager em = new ConexaoFactory().getConexao();
+        ItemOrdem itemOrdem = null;
+        try {
+            itemOrdem = em.find(ItemOrdem.class, idItemOrdem);
+        } catch (Exception e) {
+            System.err.println(e);
+        } finally {
+            em.close();
         }
-        finally{
-            fecharConexao(conexao, comando);
-        }
+        return itemOrdem;
     }
-    public static void excluir(ItemOrdem itensOrdem) throws 
-            ClassNotFoundException, SQLException{
-        Connection conexao = null;
-        Statement comando = null;
-        String stringSQL;
-        try{
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            stringSQL = "delete from itensOrdem where idItensOrdem = " 
-                    + itensOrdem.getIdItensOrdem();
-            comando.execute(stringSQL);
-        }finally {
-            fecharConexao(conexao, comando);
-                    
+
+    public ItemOrdem remove(Integer idItemOrdem) {
+        EntityManager em = new ConexaoFactory().getConexao();
+        ItemOrdem itemOrdem = null;
+        try {
+            itemOrdem = em.find(ItemOrdem.class, idItemOrdem);
+            em.getTransaction().begin();
+            em.remove(itemOrdem);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            System.err.println(e);
+        } finally {
+            em.close();
         }
-    }
-    
-    public static void alterar(ItemOrdem itensOrdem) throws ClassNotFoundException, SQLException{
-        Connection conexao = null;
-        Statement comando = null;
-        String stringSQL;
-        
-        try{
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            stringSQL = "update itensOrdem set "
-                    + "quantidade = " + itensOrdem.getQuantidade() + ","
-                    + "idProduto = ";
-            if (itensOrdem.getProduto() == null){
-                stringSQL = stringSQL + null;
-            }else{
-                stringSQL = stringSQL + itensOrdem.getProduto().getIdProduto();
-            }
-            stringSQL = stringSQL + " where idItensOrdem = " + itensOrdem.getIdItensOrdem();
-            comando.execute(stringSQL);
-        }finally{
-            fecharConexao(conexao, comando);
-        }
+        return itemOrdem;
     }
 }

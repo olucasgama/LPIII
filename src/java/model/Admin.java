@@ -11,39 +11,40 @@ import java.util.List;
 
 public class Admin extends Usuario{
     
-    private int idAdmin;
+    private Integer idAdmin;
 
     public Admin(int idAdmin, int idUsuario, String nome, String email, String senha) {
         super(idUsuario, nome, email, senha);
         this.idAdmin = idAdmin;
     }
 
-    public int getIdAdmin() {
+    public Integer getIdAdmin() {
         return idAdmin;
     }
 
     public void setIdAdmin(int idAdmin) {
         this.idAdmin = idAdmin;
     }
-    
-    public static Admin obterAdmin (int idAdmin) throws SQLException, ClassNotFoundException{
-        return AdminDAO.obterAdmin(idAdmin);
+   public static Admin obterAdmin(int idAdmin) throws SQLException, ClassNotFoundException {
+        return AdminDAO.getInstancia().findAdmin(idAdmin);
     }
-    
-    public static List<Admin> obterAdmins() throws ClassNotFoundException, SQLException{
-        return AdminDAO.obterAdmins();
+
+    public static List<Admin> obterAdmins() throws ClassNotFoundException, SQLException {
+        return AdminDAO.getInstancia().findAllAdmins();
     }
-    
+
+    @Override
     public void gravar() throws SQLException, ClassNotFoundException {
-        AdminDAO.gravar(this, this);
+        AdminDAO.getInstancia().save(this);
     }
-    
-    public void excluir() throws ClassNotFoundException, SQLException{
-        AdminDAO.excluir(this);
+
+    @Override
+    public void excluir() throws ClassNotFoundException, SQLException {
+        AdminDAO.getInstancia().remove(idAdmin);
     }
-    
-    public void alterar() throws ClassNotFoundException, SQLException{
-        AdminDAO.alterar(this);
+
+    @Override
+    public void alterar() throws ClassNotFoundException, SQLException {
+        AdminDAO.getInstancia().save(this);
     }
-    
 }

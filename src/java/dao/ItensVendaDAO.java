@@ -40,11 +40,11 @@ public class ItensVendaDAO {
         return itemVenda;
     }
 
-    public List<ItemVenda> findAllItensVenda() {
+    public List<ItemVenda> findAllItemVendas() {
         EntityManager em = new ConexaoFactory().getConexao();
         List<ItemVenda> itensVenda = null;
         try {
-            itensVenda = em.createQuery("from ItemVenda i").getResultList();
+            itensVenda = em.createQuery("from itensVenda i").getResultList();
         } catch (Exception e) {
             System.err.println(e);
         } finally {
@@ -53,7 +53,7 @@ public class ItensVendaDAO {
         return itensVenda;
     }
 
-    public ItemVenda findItemVenda(ItemVenda idItemVenda) {
+    public ItemVenda findItemVenda(Integer idItemVenda) {
         EntityManager em = new ConexaoFactory().getConexao();
         ItemVenda itemVenda = null;
         try {
@@ -65,8 +65,21 @@ public class ItensVendaDAO {
         }
         return itemVenda;
     }
+    
+    public ItemVenda findItensDaVenda(Integer idVenda) {
+        EntityManager em = new ConexaoFactory().getConexao();
+        ItemVenda itensDaVenda = null;
+        try {
+            itensDaVenda = em.find(ItemVenda.class, idVenda);
+        } catch (Exception e) {
+            System.err.println(e);
+        } finally {
+            em.close();
+        }
+        return itensDaVenda;
+    }
 
-    public ItemVenda remove(ItemVenda idItemVenda) {
+    public ItemVenda remove(Integer idItemVenda) {
         EntityManager em = new ConexaoFactory().getConexao();
         ItemVenda itemVenda = null;
         try {

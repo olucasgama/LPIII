@@ -10,7 +10,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class Usuario {
-    private int idUsuario;
+
+    private Integer idUsuario;
     private String nome;
     private String email;
     private String senha;
@@ -22,7 +23,7 @@ public class Usuario {
         this.senha = senha;
     }
 
-    public int getIdUsuario() {
+    public Integer getIdUsuario() {
         return idUsuario;
     }
 
@@ -53,22 +54,24 @@ public class Usuario {
     public void setSenha(String senha) {
         this.senha = senha;
     }
-       public static Usuario obterUsuario (int idUsuario) throws SQLException, ClassNotFoundException{
-        return UsuarioDAO.obterUsuario(idUsuario);
+
+    public static Usuario obterUsuario(int idUsuario) throws SQLException, ClassNotFoundException {
+        return UsuarioDAO.getInstancia().findUsuario(idUsuario);
     }
-    
-    public static List<Usuario> obterUsuarios() throws ClassNotFoundException, SQLException{
-        return UsuarioDAO.obterUsuarios();
+
+    public static List<Usuario> obterUsuarios() throws ClassNotFoundException, SQLException {
+        return UsuarioDAO.getInstancia().findAllUsuarios();
     }
-    
-    public void gravar() throws ClassNotFoundException, SQLException{
-        UsuarioDAO.gravar(this);
+
+    public void gravar() throws SQLException, ClassNotFoundException {
+        UsuarioDAO.getInstancia().save(this);
     }
-    
+
     public void excluir() throws ClassNotFoundException, SQLException {
-        UsuarioDAO.excluir(this);
+        UsuarioDAO.getInstancia().remove(idUsuario);
     }
-    public void alterar() throws ClassNotFoundException, SQLException{
-        UsuarioDAO.alterar(this);
+
+    public void alterar() throws ClassNotFoundException, SQLException {
+        UsuarioDAO.getInstancia().save(this);
     }
 }
