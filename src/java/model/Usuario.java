@@ -6,11 +6,25 @@
 package model;
 
 import dao.UsuarioDAO;
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Table;
 
-public class Usuario {
-    private int idUsuario;
+@Entity
+@Table
+@Inheritance( strategy = InheritanceType.JOINED )
+public class Usuario implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idUsuario;
     private String nome;
     private String email;
     private String senha;
@@ -22,7 +36,7 @@ public class Usuario {
         this.senha = senha;
     }
 
-    public int getIdUsuario() {
+    public Integer getIdUsuario() {
         return idUsuario;
     }
 
@@ -53,22 +67,24 @@ public class Usuario {
     public void setSenha(String senha) {
         this.senha = senha;
     }
-       public static Usuario obterUsuario (int idUsuario) throws SQLException, ClassNotFoundException{
-        return UsuarioDAO.obterUsuario(idUsuario);
+
+    public static Usuario obterUsuario(int idUsuario) throws SQLException, ClassNotFoundException {
+        return UsuarioDAO.getInstancia().findUsuario(idUsuario);
     }
-    
-    public static List<Usuario> obterUsuarios() throws ClassNotFoundException, SQLException{
-        return UsuarioDAO.obterUsuarios();
+
+    public static List<Usuario> obterUsuarios() throws ClassNotFoundException, SQLException {
+        return UsuarioDAO.getInstancia().findAllUsuarios();
     }
-    
-    public void gravar() throws ClassNotFoundException, SQLException{
-        UsuarioDAO.gravar(this);
+
+    public void gravar() throws SQLException, ClassNotFoundException {
+        UsuarioDAO.getInstancia().save(this);
     }
-    
+
     public void excluir() throws ClassNotFoundException, SQLException {
-        UsuarioDAO.excluir(this);
+        UsuarioDAO.getInstancia().remove(idUsuario);
     }
-    public void alterar() throws ClassNotFoundException, SQLException{
-        UsuarioDAO.alterar(this);
+
+    public void alterar() throws ClassNotFoundException, SQLException {
+        UsuarioDAO.getInstancia().save(this);
     }
 }

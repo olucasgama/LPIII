@@ -53,7 +53,7 @@ public class ItensOrdemDAO {
         return itensOrdem;
     }
 
-    public ItemOrdem findItemOrdem(Integer idItemOrdem) {
+    public static ItemOrdem findItemOrdem(Integer idItemOrdem) {
         EntityManager em = new ConexaoFactory().getConexao();
         ItemOrdem itemOrdem = null;
         try {

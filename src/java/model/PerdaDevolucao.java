@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class PerdaDevolucao {
@@ -20,9 +21,11 @@ public class PerdaDevolucao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idPerdaDevolucao;
     private String tipo;
+    @ManyToOne
     private Produto produto;
-    private Venda venda;
     private int idProduto;
+    @ManyToOne
+    private Venda venda;
     private int idVenda;
 
     public PerdaDevolucao(Integer idPerdaDevolucao, String tipo, Produto produto, Venda venda) {

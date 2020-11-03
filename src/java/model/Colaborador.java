@@ -8,10 +8,20 @@ package model;
 import dao.ColaboradorDAO;
 import java.sql.SQLException;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 
+@Entity
+@PrimaryKeyJoinColumn(referencedColumnName="idUsuario")
 public class Colaborador extends Usuario {
 
-    private int idColaborador;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idColaborador;
     private String cpf;
     private String rg;
     private String dataNascimento;
@@ -21,6 +31,7 @@ public class Colaborador extends Usuario {
     private String sexo;
     private int numero;
     private String complemento;
+    @ManyToOne
     private Endereco endereco;
     private int idEndereco;
 
@@ -61,7 +72,7 @@ public class Colaborador extends Usuario {
     
     
 
-    public int getIdColaborador() {
+    public Integer getIdColaborador() {
         return idColaborador;
     }
 
@@ -143,28 +154,27 @@ public class Colaborador extends Usuario {
     public void setIdEndereco(int idEndereco) {
         this.idEndereco = idEndereco;
     }
+    
+    public static Colaborador obterColaborador(int idColaborador) throws SQLException, ClassNotFoundException {
+        return ColaboradorDAO.getInstancia().findColaborador(idColaborador);
+    }
 
-    public static Colaborador obterColaborador (int idColaborador) throws SQLException, ClassNotFoundException{
-        return ColaboradorDAO.obterColaborador(idColaborador);
+    public static List<Colaborador> obterColaboradores() throws ClassNotFoundException, SQLException {
+        return ColaboradorDAO.getInstancia().findAllColaboradors();
     }
-    
-    public static List<Colaborador> obterColaboradores() throws ClassNotFoundException, SQLException{
-        return ColaboradorDAO.obterColaboradores();
-    }
-    
- 
+
     @Override
     public void gravar() throws SQLException, ClassNotFoundException {
-        ColaboradorDAO.gravar(this, this);
+        ColaboradorDAO.getInstancia().save(this);
     }
-    
+
     @Override
-    public void excluir() throws ClassNotFoundException, SQLException{
-        ColaboradorDAO.excluir(this);
+    public void excluir() throws ClassNotFoundException, SQLException {
+        ColaboradorDAO.getInstancia().remove(idColaborador);
     }
-    
+
     @Override
-    public void alterar() throws ClassNotFoundException, SQLException{
-        ColaboradorDAO.alterar(this);
+    public void alterar() throws ClassNotFoundException, SQLException {
+        ColaboradorDAO.getInstancia().save(this);
     }
 }

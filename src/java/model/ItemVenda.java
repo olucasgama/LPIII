@@ -7,12 +7,13 @@ package model;
 
 import dao.ItensVendaDAO;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class ItemVenda {
@@ -22,8 +23,10 @@ public class ItemVenda {
     private Integer idItemVenda;
     private int quantidade;
     private float precoUnitario;
+    @ManyToOne
     private Venda venda;
     private int idVenda;
+    @ManyToOne
     private Produto produto;
     private int idProduto;
 
@@ -99,23 +102,23 @@ public class ItemVenda {
     }
 
     public static List<ItemVenda> obterItensVenda(int idVenda) throws SQLException, ClassNotFoundException {
-        return ItensVendaDAO.getInstancia().findAllItensVenda();
+        return (List<ItemVenda>) ItensVendaDAO.getInstancia().findItensDaVenda(idVenda);
     }
 
     public static List<ItemVenda> obterItensVendas() throws ClassNotFoundException, SQLException {
-        return ItensVendaDAO.getInstancia().findAllItensVenda();
+        return ItensVendaDAO.getInstancia().findAllItemVendas();
     }
 
-//    public static ItemVenda obterItemVenda(int idItensVenda) throws ClassNotFoundException, SQLException {
-//        return ItensVendaDAO.getInstancia().findItemVenda(idItemVenda);
-//    }
+       public static ItemVenda obterItemVenda(Integer idItensVenda) throws ClassNotFoundException, SQLException {
+        return ItensVendaDAO.getInstancia().findItemVenda(idItensVenda);
+    }
 
     public void gravar() throws SQLException, ClassNotFoundException {
         ItensVendaDAO.getInstancia().save(this);
     }
 
-    public void excluir() throws ClassNotFoundException, SQLException {
-        ItensVendaDAO.getInstancia().remove(this);
+       public void excluir() throws ClassNotFoundException, SQLException{
+        ItensVendaDAO.getInstancia().remove(idItemVenda);
     }
 
     public void alterar() throws SQLException, ClassNotFoundException {

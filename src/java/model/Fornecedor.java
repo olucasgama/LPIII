@@ -8,10 +8,18 @@ package model;
 import dao.FornecedorDAO;
 import java.sql.SQLException;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
+@Entity
 public class Fornecedor {
 
-    private int idFornecedor;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idFornecedor;
     private String nomeFantasia;
     private String cnpj;
     private String nomeRepresentante;
@@ -19,6 +27,7 @@ public class Fornecedor {
     private String telefone;
     private int numero;
     private String complemento;
+    @ManyToOne
     private Endereco endereco;
     private int idEndereco;
 
@@ -50,7 +59,7 @@ public class Fornecedor {
         this.complemento = complemento;
     }
 
-    public int getIdFornecedor() {
+    public Integer getIdFornecedor() {
         return idFornecedor;
     }
 
@@ -117,23 +126,23 @@ public class Fornecedor {
         this.idEndereco = idEndereco;
     }
     
-    public static Fornecedor obterFornecedor (int idFornecedor) throws SQLException, ClassNotFoundException{
-        return FornecedorDAO.obterFornecedor(idFornecedor);
+   public static Fornecedor obterFornecedor(int idFornecedor) throws SQLException, ClassNotFoundException {
+        return FornecedorDAO.getInstancia().findFornecedor(idFornecedor);
     }
-    
-    public static List<Fornecedor> obterFornecedores() throws ClassNotFoundException, SQLException{
-        return FornecedorDAO.obterFornecedores();
+
+    public static List<Fornecedor> obterFornecedores() throws ClassNotFoundException, SQLException {
+        return FornecedorDAO.getInstancia().findAllFornecedors();
     }
-    
+
     public void gravar() throws SQLException, ClassNotFoundException {
-       FornecedorDAO.gravar(this);
+        FornecedorDAO.getInstancia().save(this);
     }
-    
-    public void excluir() throws ClassNotFoundException, SQLException{
-        FornecedorDAO.excluir(this);
+
+    public void excluir() throws ClassNotFoundException, SQLException {
+        FornecedorDAO.getInstancia().remove(idFornecedor);
     }
-    
-    public void alterar() throws ClassNotFoundException, SQLException{
-        FornecedorDAO.alterar(this);
+
+    public void alterar() throws ClassNotFoundException, SQLException {
+        FornecedorDAO.getInstancia().save(this);
     }
 }

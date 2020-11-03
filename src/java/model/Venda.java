@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Venda {
@@ -24,13 +25,15 @@ public class Venda {
     private int codBarra;
     private float valorDesconto;
     private String situacao;
+    @ManyToOne
     private Usuario usuario;
-    private FormaPagamento formaPagamento;
-    private Cliente cliente;   
     private int idUsuario;
+    @ManyToOne
+    private FormaPagamento formaPagamento;
     private int idFormaPgto;
+    @ManyToOne
+    private Cliente cliente;   
     private int idCliente;
- 
 
     public Venda(Integer idVenda, String dataVenda, float subTotal, int codBarra, 
             float valorDesconto, String situacao, Usuario usuario, 

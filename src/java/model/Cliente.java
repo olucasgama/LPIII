@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import dao.EnderecoDAO;
 import java.util.List;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Cliente {
@@ -34,6 +35,7 @@ public class Cliente {
     private String sexo;
     private int numero;
     private String complemento;
+    @ManyToOne
     private Endereco endereco;
     private int idEndereco;
 

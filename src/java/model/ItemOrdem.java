@@ -7,12 +7,12 @@ package model;
 
 import dao.ItensOrdemDAO;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class ItemOrdem {
@@ -21,8 +21,10 @@ public class ItemOrdem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idItemOrdem;
     private int quantidade;
+    @ManyToOne
     private Produto produto;
     private int idProduto;
+    @ManyToOne
     private OrdemServico ordemServico;
     private int idOrdemSrv;
 
@@ -96,9 +98,9 @@ public class ItemOrdem {
         return ItensOrdemDAO.getInstancia().findAllItemOrdems();
     }
     
-//    public static ItemOrdem obterItemOrdem(Integer idItensOrdem) throws ClassNotFoundException, SQLException {
-//        return ItensOrdemDAO.obterItemOrdem(idItensOrdem);
-//    }
+    public static ItemOrdem obterItemOrdem(Integer idItensOrdem) throws ClassNotFoundException, SQLException {
+        return ItensOrdemDAO.findItemOrdem(idItensOrdem);
+    }
 
     public void gravar() throws SQLException, ClassNotFoundException {
         ItensOrdemDAO.getInstancia().save(this);
