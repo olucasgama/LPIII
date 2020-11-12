@@ -46,6 +46,9 @@ public class FormaPagamento {
         this.situacaoConfirmacao = situacaoConfirmacao;
     }
 
+    public FormaPagamento() {
+    }
+
     public String getNome() {
         return nome;
     }

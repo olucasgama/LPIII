@@ -8,9 +8,17 @@ package model;
 import dao.FornecedorDAO;
 import java.sql.SQLException;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
+@Entity
 public class Fornecedor {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idFornecedor;
     private String nomeFantasia;
     private String cnpj;
@@ -19,10 +27,11 @@ public class Fornecedor {
     private String telefone;
     private int numero;
     private String complemento;
+    @ManyToOne
     private Endereco endereco;
     private int idEndereco;
 
-    public Fornecedor(int idFornecedor, String nomeFantasia, String cnpj, String nomeRepresentante, String email, String telefone, int numero, String complemento, Endereco endereco) {
+    public Fornecedor(Integer idFornecedor, String nomeFantasia, String cnpj, String nomeRepresentante, String email, String telefone, int numero, String complemento, Endereco endereco) {
         this.idFornecedor = idFornecedor;
         this.nomeFantasia = nomeFantasia;
         this.cnpj = cnpj;
@@ -32,6 +41,9 @@ public class Fornecedor {
         this.numero = numero;
         this.complemento = complemento;
         this.endereco = endereco;
+    }
+
+    public Fornecedor() {
     }
 
     public int getNumero() {

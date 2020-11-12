@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Produto {
@@ -32,9 +33,11 @@ public class Produto {
     private int qtdAtual;
     private int qtdMaxima;
     private float largura;
+    @ManyToOne
     private Fornecedor fornecedor;
-    private Categoria categoria;
     private int idFornecedor;
+    @ManyToOne
+    private Categoria categoria;
     private int idCategoria;
 
     public Produto(Integer idProduto, String nome, int codInterno, int codBarra, 
@@ -57,6 +60,9 @@ public class Produto {
         this.largura = largura;
         this.fornecedor = fornecedor;
         this.categoria = categoria;
+    }
+
+    public Produto() {
     }
 
     public float getLargura() {

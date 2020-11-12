@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class OrdemServico {
@@ -23,6 +24,7 @@ public class OrdemServico {
     private String situacao;
     private String descricao;
     private int numOS;
+    @ManyToOne
     private Fornecedor fornecedor;
     private int idFornecedor;
 
@@ -34,6 +36,9 @@ public class OrdemServico {
         this.descricao = descricao;
         this.numOS = numOS;
         this.fornecedor = fornecedor;
+    }
+
+    public OrdemServico() {
     }
 
     public String getDescricao() {

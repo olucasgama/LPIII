@@ -39,6 +39,9 @@ public class ItemVenda {
         this.produto = produto;
     }
 
+    public ItemVenda() {
+    }
+
     public Integer getIdItensVenda() {
         return idItemVenda;
     }
