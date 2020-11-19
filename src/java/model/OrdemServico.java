@@ -38,6 +38,9 @@ public class OrdemServico {
         this.fornecedor = fornecedor;
     }
 
+    public OrdemServico() {
+    }
+
     public String getDescricao() {
         return descricao;
     }

@@ -35,6 +35,9 @@ public class PerdaDevolucao {
         this.venda = venda;
     }
 
+    public PerdaDevolucao() {
+    }
+
     public Integer getIdPerdaDevolucao() {
         return idPerdaDevolucao;
     }

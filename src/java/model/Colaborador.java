@@ -9,9 +9,6 @@ import dao.ColaboradorDAO;
 import java.sql.SQLException;
 import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 
@@ -19,8 +16,6 @@ import javax.persistence.PrimaryKeyJoinColumn;
 @PrimaryKeyJoinColumn(referencedColumnName="idUsuario")
 public class Colaborador extends Usuario {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idColaborador;
     private String cpf;
     private String rg;
@@ -35,10 +30,14 @@ public class Colaborador extends Usuario {
     private Endereco endereco;
     private int idEndereco;
 
-    public Colaborador(int idColaborador, String cpf, String rg, 
+    public Colaborador(){
+        
+    }
+    
+    public Colaborador(Integer idColaborador, String cpf, String rg, 
             String dataNascimento, String telefone, String celular, 
             String estadoCivil, String sexo, int numero, String complemento, 
-            int idUsuario, String nome, String email, String senha, 
+            Integer idUsuario, String nome, String email, String senha, 
             Endereco endereco) {
         super(idUsuario, nome, email, senha);
         this.idColaborador = idColaborador;
@@ -54,6 +53,10 @@ public class Colaborador extends Usuario {
         this.endereco = endereco;
     }
 
+    public Colaborador(Integer idUsuario, String nome, String email, String senha) {
+        super(idUsuario, nome, email, senha);
+    }
+    
     public int getNumero() {
         return numero;
     }

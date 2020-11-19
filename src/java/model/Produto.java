@@ -62,6 +62,9 @@ public class Produto {
         this.categoria = categoria;
     }
 
+    public Produto() {
+    }
+
     public float getLargura() {
         return largura;
     }

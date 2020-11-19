@@ -9,22 +9,25 @@ import dao.AdminDAO;
 import java.sql.SQLException;
 import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.PrimaryKeyJoinColumn;
 
 @Entity
-@PrimaryKeyJoinColumn(referencedColumnName="idUsuario")
+@PrimaryKeyJoinColumn(name="idUsuario")
 public class Admin extends Usuario{
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idAdmin;
+    
+    public Admin(){
+    
+    }
 
-    public Admin(int idAdmin, int idUsuario, String nome, String email, String senha) {
+    public Admin(Integer idAdmin, Integer idUsuario, String nome, String email, String senha) {
         super(idUsuario, nome, email, senha);
         this.idAdmin = idAdmin;
+    }
+
+    public Admin(Integer idUsuario, String nome, String email, String senha) {
+        super(idUsuario, nome, email, senha);
     }
 
     public Integer getIdAdmin() {

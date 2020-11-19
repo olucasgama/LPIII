@@ -25,6 +25,9 @@ public class Endereco {
     private String uf;
     private String cep;
 
+    public Endereco() {
+    }
+
     public Endereco(Integer idEndereco, String logradouro, String cidade, String bairro, String uf, String cep) {
         this.idEndereco = idEndereco;
         this.logradouro = logradouro;

@@ -31,7 +31,7 @@ public class Fornecedor {
     private Endereco endereco;
     private int idEndereco;
 
-    public Fornecedor(int idFornecedor, String nomeFantasia, String cnpj, String nomeRepresentante, String email, String telefone, int numero, String complemento, Endereco endereco) {
+    public Fornecedor(Integer idFornecedor, String nomeFantasia, String cnpj, String nomeRepresentante, String email, String telefone, int numero, String complemento, Endereco endereco) {
         this.idFornecedor = idFornecedor;
         this.nomeFantasia = nomeFantasia;
         this.cnpj = cnpj;
@@ -41,6 +41,9 @@ public class Fornecedor {
         this.numero = numero;
         this.complemento = complemento;
         this.endereco = endereco;
+    }
+
+    public Fornecedor() {
     }
 
     public int getNumero() {

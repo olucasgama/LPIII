@@ -49,6 +49,9 @@ public class Venda {
         this.cliente = cliente;
     }
 
+    public Venda() {
+    }
+
     public Integer getIdVenda() {
         return idVenda;
     }

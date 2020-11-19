@@ -36,6 +36,9 @@ public class ItemOrdem {
         this.ordemServico = ordemServico;
     }
 
+    public ItemOrdem() {
+    }
+
     public Integer getIdItensOrdem() {
         return idItemOrdem;
     }

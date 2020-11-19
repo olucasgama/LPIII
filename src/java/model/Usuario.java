@@ -15,11 +15,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.Table;
 
 @Entity
-@Table
-@Inheritance( strategy = InheritanceType.JOINED )
+@Inheritance(strategy = InheritanceType.JOINED) 
 public class Usuario implements Serializable {
 
     @Id
@@ -29,11 +27,14 @@ public class Usuario implements Serializable {
     private String email;
     private String senha;
 
-    public Usuario(int idUsuario, String nome, String email, String senha) {
+    public Usuario(Integer idUsuario, String nome, String email, String senha) {
         this.idUsuario = idUsuario;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
+    }
+
+    public Usuario() {
     }
 
     public Integer getIdUsuario() {

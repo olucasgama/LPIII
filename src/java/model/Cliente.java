@@ -58,6 +58,9 @@ public class Cliente {
         this.endereco = endereco;
     }
 
+    public Cliente() {
+    }
+
     public int getNumero() {
         return numero;
     }
