@@ -45,7 +45,7 @@ public class FormaPagamentoDAO {
         EntityManager em = new ConexaoFactory().getConexao();
         List<FormaPagamento> formasPagamentos = null;
         try {
-            formasPagamentos = em.createQuery("from FormaPagamento f").getResultList();
+            formasPagamentos = em.createQuery("from FormaPagamento fp").getResultList();
         } catch (Exception e) {
             System.err.println(e);
         } finally {

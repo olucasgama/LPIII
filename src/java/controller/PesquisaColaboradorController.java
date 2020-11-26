@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.ColaboradorDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -28,15 +29,10 @@ public class PesquisaColaboradorController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try{
-            request.setAttribute("colaboradores", Colaborador.obterColaboradores());
-            RequestDispatcher view = request.getRequestDispatcher("/pesquisarColaborador.jsp");
-            view.forward(request, response);
-        }catch (ClassNotFoundException e){
-            throw new ServletException(e);
-        }catch (SQLException e){
-            throw new ServletException(e);
-        }
+        //request.setAttribute("colaboradores", Colaborador.obterColaboradores());
+        request.setAttribute("colaboradores", ColaboradorDAO.getInstancia().findAllColaboradors());
+        RequestDispatcher view = request.getRequestDispatcher("/pesquisarColaborador.jsp");
+        view.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

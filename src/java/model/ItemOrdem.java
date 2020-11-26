@@ -6,6 +6,7 @@
 package model;
 
 import dao.ItensOrdemDAO;
+import dao.OrdemServicoDAO;
 import java.sql.SQLException;
 import java.util.List;
 import javax.persistence.Entity;
@@ -76,7 +77,8 @@ public class ItemOrdem {
 
     public OrdemServico getOrdemServico() throws SQLException, ClassNotFoundException {
         if ((this.idOrdemSrv != 0) && (this.ordemServico == null)) {
-            this.ordemServico = OrdemServico.obterOrdemServico(this.idOrdemSrv);
+            //this.ordemServico = OrdemServico.obterOrdemServico(this.idOrdemSrv);
+            this.ordemServico = OrdemServicoDAO.getInstancia().findOrdemServico(idOrdemSrv);
         }
         return ordemServico;
     }

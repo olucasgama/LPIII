@@ -44,7 +44,7 @@ public class UsuarioDAO {
         EntityManager em = new ConexaoFactory().getConexao();
         List<Usuario> usuarios = null;
         try {
-            usuarios = em.createQuery("from usuario c").getResultList();
+            usuarios = em.createQuery("from Usuario u").getResultList();
         } catch (Exception e) {
             System.err.println(e);
         } finally {

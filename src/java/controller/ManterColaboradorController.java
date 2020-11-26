@@ -5,6 +5,9 @@
  */
 package controller;
 
+import dao.ColaboradorDAO;
+import dao.EnderecoDAO;
+import dao.UsuarioDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -97,11 +100,14 @@ public class ManterColaboradorController extends HttpServlet {
         try {
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
-            request.setAttribute("usuarios", Usuario.obterUsuarios());
-            request.setAttribute("enderecos", Endereco.obterEnderecos());
+            //request.setAttribute("usuarios", Usuario.obterUsuarios());
+            request.setAttribute("usuarios", UsuarioDAO.getInstancia().findAllUsuarios());
+            //request.setAttribute("enderecos", Endereco.obterEnderecos());
+            request.setAttribute("enderecos", EnderecoDAO.getInstancia().findAllEnderecos());
             if(!operacao.equals("Incluir")){
                 int idColaborador = Integer.parseInt(request.getParameter("idColaborador"));
-                Colaborador colaborador = Colaborador.obterColaborador(idColaborador);
+                //Colaborador colaborador = Colaborador.obterColaborador(idColaborador);
+                Colaborador colaborador = ColaboradorDAO.getInstancia().findColaborador(idColaborador);
                 request.setAttribute("colaborador", colaborador);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterColaborador.jsp");
@@ -109,10 +115,6 @@ public class ManterColaboradorController extends HttpServlet {
         } catch (ServletException e) {
             throw e;
         } catch (IOException e) {
-            throw new ServletException(e);
-        } catch (SQLException e) {
-            throw new ServletException(e);
-        } catch (ClassNotFoundException e) {
             throw new ServletException(e);
         }
     }
@@ -137,31 +139,29 @@ public class ManterColaboradorController extends HttpServlet {
         try{
             Endereco endereco = null;
             if(idEndereco != 0){
-                endereco = Endereco.obterEndereco(idEndereco);
+                //endereco = Endereco.obterEndereco(idEndereco);
+                endereco = EnderecoDAO.getInstancia().findEndereco(idEndereco);
             }
             Colaborador colaborador = new Colaborador(idColaborador, cpf, rg,
             dataNascimento, telefone, celular, estadoCivil, sexo, numero, 
                     complemento, idColaborador, nome, email, senha, endereco);
             if(operacao.equals("Incluir")){
-                colaborador.gravar();
+                //colaborador.gravar();
+                ColaboradorDAO.getInstancia().save(colaborador);
             }else{
                 if(operacao.equals("Excluir")){
-                    colaborador.excluir();
+                    //colaborador.excluir();
+                    ColaboradorDAO.getInstancia().remove(idColaborador);
                 }
                 if(operacao.equals("Alterar")){
-                    colaborador.alterar();
+                    //colaborador.alterar();
+                    ColaboradorDAO.getInstancia().save(colaborador);
                 }
             }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaColaboradorController");
             view.forward(request, response);
         } catch (IOException e){
             throw new ServletException(e);
-        }
-        catch(SQLException e){
-            throw new ServletException(e);
-        }
-        catch(ClassNotFoundException e){
-           throw new ServletException(e);
         }
     }
 }

@@ -37,7 +37,8 @@ public class Admin extends Usuario{
     public void setIdAdmin(int idAdmin) {
         this.idAdmin = idAdmin;
     }
-   public static Admin obterAdmin(int idAdmin) throws SQLException, ClassNotFoundException {
+    
+    /*public static Admin obterAdmin(int idAdmin) throws SQLException, ClassNotFoundException {
         return AdminDAO.getInstancia().findAdmin(idAdmin);
     }
 
@@ -58,5 +59,5 @@ public class Admin extends Usuario{
     @Override
     public void alterar() throws ClassNotFoundException, SQLException {
         AdminDAO.getInstancia().save(this);
-    }
+    }*/
 }

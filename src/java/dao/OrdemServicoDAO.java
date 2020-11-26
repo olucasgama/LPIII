@@ -44,7 +44,7 @@ public class OrdemServicoDAO {
         EntityManager em = new ConexaoFactory().getConexao();
         List<OrdemServico> ordensServico = null;
         try {
-            ordensServico = em.createQuery("from ordemServico o").getResultList();
+            ordensServico = em.createQuery("from OrdemServico os").getResultList();
         } catch (Exception e) {
             System.err.println(e);
         } finally {

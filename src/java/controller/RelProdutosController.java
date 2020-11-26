@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.CategoriaDAO;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -52,15 +53,10 @@ public class RelProdutosController extends HttpServlet {
 
     public void filtrar(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
-        try {
-            request.setAttribute("categorias", Categoria.obterCategorias());
-            RequestDispatcher view = request.getRequestDispatcher("/manterRelatorioProduto.jsp");
-            view.forward(request, response);
-        } catch (ClassNotFoundException e) {
-            throw new ServletException(e);
-        } catch (SQLException e) {
-            throw new ServletException(e);
-        }
+        //request.setAttribute("categorias", Categoria.obterCategorias());
+        request.setAttribute("categorias", CategoriaDAO.getInstancia().findAllCategorias());
+        RequestDispatcher view = request.getRequestDispatcher("/manterRelatorioProduto.jsp");
+        view.forward(request, response);
     }
 
     public void emitir(HttpServletRequest request, HttpServletResponse response)

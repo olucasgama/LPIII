@@ -44,7 +44,7 @@ public class FornecedorDAO {
         EntityManager em = new ConexaoFactory().getConexao();
         List<Fornecedor> fornecedors = null;
         try {
-            fornecedors = em.createQuery("from fornecedor c").getResultList();
+            fornecedors = em.createQuery("from Fornecedor f").getResultList();
         } catch (Exception e) {
             System.err.println(e);
         } finally {

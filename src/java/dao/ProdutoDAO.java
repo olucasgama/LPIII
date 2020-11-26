@@ -44,7 +44,7 @@ public class ProdutoDAO {
         EntityManager em = new ConexaoFactory().getConexao();
         List<Produto> produtos = null;
         try {
-            produtos = em.createQuery("from produto p").getResultList();
+            produtos = em.createQuery("from Produto p").getResultList();
         } catch (Exception e) {
             System.err.println(e);
         } finally {

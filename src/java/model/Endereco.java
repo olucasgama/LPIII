@@ -85,6 +85,7 @@ public class Endereco {
         this.cep = cep;
     }    
     
+    /*
     public static Endereco obterEndereco (int idEndereco) throws SQLException, ClassNotFoundException{
         return EnderecoDAO.getInstancia().findEndereco(idEndereco);
 }
@@ -103,5 +104,5 @@ public class Endereco {
     
     public void alterar() throws ClassNotFoundException, SQLException {
         EnderecoDAO.getInstancia().save(this);
-    }
+    }*/
 }

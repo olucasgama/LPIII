@@ -6,6 +6,7 @@
 package model;
 
 import dao.ColaboradorDAO;
+import dao.EnderecoDAO;
 import java.sql.SQLException;
 import java.util.List;
 import javax.persistence.Entity;
@@ -139,9 +140,11 @@ public class Colaborador extends Usuario {
         this.sexo = sexo;
     }
 
+    //Alterar aqui
     public Endereco getEndereco() throws SQLException, ClassNotFoundException {
         if((this.idEndereco !=0) && (this.endereco == null)){
-            this.endereco = Endereco.obterEndereco(this.idEndereco);
+            //this.endereco = Endereco.obterEndereco(this.idEndereco);
+            this.endereco = EnderecoDAO.getInstancia().findEndereco(idEndereco);
         }
         return endereco;
     }
@@ -157,7 +160,8 @@ public class Colaborador extends Usuario {
     public void setIdEndereco(int idEndereco) {
         this.idEndereco = idEndereco;
     }
-    
+
+/*    
     public static Colaborador obterColaborador(int idColaborador) throws SQLException, ClassNotFoundException {
         return ColaboradorDAO.getInstancia().findColaborador(idColaborador);
     }
@@ -165,6 +169,7 @@ public class Colaborador extends Usuario {
     public static List<Colaborador> obterColaboradores() throws ClassNotFoundException, SQLException {
         return ColaboradorDAO.getInstancia().findAllColaboradors();
     }
+
 
     @Override
     public void gravar() throws SQLException, ClassNotFoundException {
@@ -180,4 +185,5 @@ public class Colaborador extends Usuario {
     public void alterar() throws ClassNotFoundException, SQLException {
         ColaboradorDAO.getInstancia().save(this);
     }
+*/
 }

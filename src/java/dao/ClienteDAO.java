@@ -44,7 +44,7 @@ public class ClienteDAO {
         EntityManager em = new ConexaoFactory().getConexao();
         List<Cliente> clientes = null;
         try {
-            clientes = em.createQuery("from Cliente c", Cliente.class).getResultList();
+            clientes = em.createQuery("from Cliente cl", Cliente.class).getResultList();
         } catch (Exception e) {
             System.err.println(e);
         } finally {

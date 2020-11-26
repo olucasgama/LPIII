@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.CategoriaDAO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -48,14 +49,15 @@ public class ManterCategoriaController extends HttpServlet {
             request.setAttribute("operacao", operacao);
             if (!operacao.equals("Incluir")) {
                 int idCategoria = Integer.parseInt(request.getParameter("idCategoria"));
-                Categoria categoria = Categoria.obterCategoria(idCategoria);
+                //Categoria categoria = Categoria.obterCategoria(idCategoria);
+                Categoria categoria = CategoriaDAO.getInstancia().findCategoria(idCategoria);
                 request.setAttribute("categoria", categoria);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterCategoria.jsp");
             view.forward(request, response);
         } catch (ServletException e) {
             throw e;
-        } catch (IOException | SQLException | ClassNotFoundException e) {
+        } catch (IOException e) {
             throw new ServletException(e);
         }
     }
@@ -69,13 +71,16 @@ public class ManterCategoriaController extends HttpServlet {
         try{
         Categoria categoria = new Categoria(idCategoria, descricao);
             if (operacao.equals("Incluir")) {
-                categoria.gravar();
+                //categoria.gravar();
+                CategoriaDAO.getInstancia().save(categoria);
             } else {
                 if (operacao.equals("Excluir")) {
-                    categoria.excluir();
+                    //categoria.excluir();
+                    CategoriaDAO.getInstancia().remove(idCategoria);
                 }else{
                     if (operacao.equals("Alterar")) {
-                        categoria.alterar();
+                        //categoria.alterar();
+                        CategoriaDAO.getInstancia().save(categoria);
                     }
                 }
             }
@@ -83,10 +88,6 @@ public class ManterCategoriaController extends HttpServlet {
             view.forward(request, response);
  
         }catch (IOException e) {
-            throw new ServletException(e);
-        } catch (SQLException e) {
-            throw new ServletException(e);
-        } catch (ClassNotFoundException e) {
             throw new ServletException(e);
         }
     }

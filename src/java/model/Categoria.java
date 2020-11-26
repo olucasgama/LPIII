@@ -46,6 +46,7 @@ public class Categoria {
         this.descricao = descricao;
     }
     
+    /*
     public static Categoria obterCategoria (int idCategoria) throws SQLException, ClassNotFoundException{
         return CategoriaDAO.getInstancia().findCategoria(idCategoria);
     }
@@ -64,5 +65,5 @@ public class Categoria {
     
     public void alterar() throws ClassNotFoundException, SQLException{
         CategoriaDAO.getInstancia().save(this);
-    }
+    }*/
 }

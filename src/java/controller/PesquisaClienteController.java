@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.ClienteDAO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -29,15 +30,10 @@ public class PesquisaClienteController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
-            try{
-                request.setAttribute("clientes", Cliente.obterClientes());
-                RequestDispatcher view = request.getRequestDispatcher("/pesquisarCliente.jsp");
-                view.forward(request, response);
-            }catch(ClassNotFoundException e){
-                throw new ServletException(e);
-            }catch(SQLException e){
-                throw new ServletException(e);
-        }
+        //request.setAttribute("clientes", Cliente.obterClientes());
+        request.setAttribute("clientes", ClienteDAO.getInstancia().findAllClientes());
+        RequestDispatcher view = request.getRequestDispatcher("/pesquisarCliente.jsp");
+        view.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
