@@ -5,6 +5,8 @@
  */
 package controller;
 
+import dao.ClienteDAO;
+import dao.EnderecoDAO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -96,10 +98,12 @@ public class ManterClienteController extends HttpServlet {
         try {
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
-            request.setAttribute("enderecos", Endereco.obterEnderecos());
+            //request.setAttribute("enderecos", Endereco.obterEnderecos());
+            request.setAttribute("enderecos", EnderecoDAO.getInstancia().findAllEnderecos());
             if (!operacao.equals("Incluir")) {
                 int idCliente = Integer.parseInt(request.getParameter("idCliente"));
-                Cliente cliente = Cliente.obterCliente(idCliente);
+                //Cliente cliente = Cliente.obterCliente(idCliente);
+                Cliente cliente = ClienteDAO.getInstancia().findCliente(idCliente);
                 request.setAttribute("cliente", cliente);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterCliente.jsp");
@@ -107,10 +111,6 @@ public class ManterClienteController extends HttpServlet {
         } catch (ServletException e) {
             throw e;
         } catch (IOException e) {
-            throw new ServletException(e);
-        } catch (SQLException e) {
-            throw new ServletException(e);
-        } catch (ClassNotFoundException e) {
             throw new ServletException(e);
         }
     }
@@ -138,29 +138,29 @@ public class ManterClienteController extends HttpServlet {
         try{
             Endereco endereco = null;
             if (idEndereco != 0) {
-                endereco = Endereco.obterEndereco(idEndereco);
+                //endereco = Endereco.obterEndereco(idEndereco);
+                endereco = EnderecoDAO.getInstancia().findEndereco(idEndereco);
             }
             Cliente cliente = new Cliente(idCliente, cnpj, 
                     razaoSocial, inscricaoEstadual, nome, cpf, rg, telefone, 
                     celular, email, dataNascimento, estadoCivil, sexo, numero,
                     complemento, endereco);
             if (operacao.equals("Incluir")) {
-                cliente.gravar();
+                //cliente.gravar();
+                ClienteDAO.getInstancia().save(cliente);
             } else {
                 if (operacao.equals("Excluir")) {
-                    cliente.excluir();
+                    //cliente.excluir();
+                    ClienteDAO.getInstancia().remove(idCliente);
                 }
                 if (operacao.equals("Alterar")) {
-                    cliente.alterar();
+                    //cliente.alterar();
+                    ClienteDAO.getInstancia().save(cliente);
                 }
             }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaClienteController");
             view.forward(request, response);   
         }catch (IOException e) {
-            throw new ServletException(e);
-        } catch (SQLException e) {
-            throw new ServletException(e);
-        } catch (ClassNotFoundException e) {
             throw new ServletException(e);
         } catch (ServletException e) {
             throw e;

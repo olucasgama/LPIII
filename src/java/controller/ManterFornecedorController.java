@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.EnderecoDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -96,7 +97,8 @@ public class ManterFornecedorController extends HttpServlet {
         try{
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
-            request.setAttribute("enderecos", Endereco.obterEnderecos());
+            //request.setAttribute("enderecos", Endereco.obterEnderecos());
+            request.setAttribute("enderecos", EnderecoDAO.getInstancia().findAllEnderecos());
             if(!operacao.equals("Incluir")){
                 int idFornecedor = Integer.parseInt(request.getParameter("idFornecedor"));
                 Fornecedor fornecedor = Fornecedor.obterFornecedor(idFornecedor);
@@ -134,7 +136,8 @@ public class ManterFornecedorController extends HttpServlet {
         try{
             Endereco endereco = null;
             if(idEndereco != 0){
-                endereco = Endereco.obterEndereco(idEndereco);
+                //endereco = Endereco.obterEndereco(idEndereco);
+                endereco = EnderecoDAO.getInstancia().findEndereco(idEndereco);
             }
             Fornecedor fornecedor = new Fornecedor(idFornecedor, nomeFantasia, 
                     cnpj, nomeRepresentante, email, telefone, numero, 

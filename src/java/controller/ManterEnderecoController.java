@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.EnderecoDAO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -46,7 +47,8 @@ public class ManterEnderecoController extends HttpServlet {
             request.setAttribute("operacao", operacao);
             if (!operacao.equals("Incluir")) {
                 int idEndereco = Integer.parseInt(request.getParameter("idEndereco"));
-                Endereco endereco = Endereco.obterEndereco(idEndereco);
+                //Endereco endereco = Endereco.obterEndereco(idEndereco);
+                Endereco endereco = EnderecoDAO.getInstancia().findEndereco(idEndereco);
                 request.setAttribute("endereco", endereco);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterEndereco.jsp");
@@ -54,10 +56,6 @@ public class ManterEnderecoController extends HttpServlet {
         } catch (ServletException e) {
             throw e;
         } catch (IOException e) {
-            throw new ServletException(e);
-        } catch (SQLException e) {
-            throw new ServletException(e);
-        } catch (ClassNotFoundException e) {
             throw new ServletException(e);
         }
     }
@@ -76,13 +74,14 @@ public class ManterEnderecoController extends HttpServlet {
         Endereco endereco = new Endereco(idEndereco, logradouro, cidade, bairro, 
                 uf, cep);
             if (operacao.equals("Incluir")) {
-                endereco.gravar();
+                //endereco.gravar();
+                EnderecoDAO.getInstancia().save(endereco);
             } else {
                 if (operacao.equals("Excluir")) {
-                    endereco.excluir();
+                    EnderecoDAO.getInstancia().remove(idEndereco);
                 }
                 if (operacao.equals("Alterar")) {
-                    endereco.alterar();
+                    EnderecoDAO.getInstancia().save(endereco);
                 }
             }
         
@@ -90,10 +89,6 @@ public class ManterEnderecoController extends HttpServlet {
             view.forward(request, response);
         }
         catch (IOException e) {
-            throw new ServletException(e);
-        } catch (SQLException e) {
-            throw new ServletException(e);
-        } catch (ClassNotFoundException e) {
             throw new ServletException(e);
         } 
     }

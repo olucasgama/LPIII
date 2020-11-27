@@ -5,6 +5,8 @@
  */
 package controller;
 
+import dao.AdminDAO;
+import dao.UsuarioDAO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -46,10 +48,11 @@ public class ManterAdminController extends HttpServlet {
         try {
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
-            request.setAttribute("usuarios", Usuario.obterUsuarios());
+            //request.setAttribute("usuarios", Usuario.obterUsuarios());
+            request.setAttribute("usuarios", UsuarioDAO.getInstancia().findUsuario(Integer.MIN_VALUE));
             if (!operacao.equals("Incluir")) {
                 int idAdmin = Integer.parseInt(request.getParameter("idAdmin"));
-                Admin admin = Admin.obterAdmin(idAdmin);
+                Admin admin = AdminDAO.getInstancia().findAdmin(idAdmin);
                 request.setAttribute("admin", admin);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterAdmin.jsp");
@@ -57,10 +60,6 @@ public class ManterAdminController extends HttpServlet {
         } catch (ServletException e) {
             throw e;
         } catch (IOException e) {
-            throw new ServletException(e);
-        } catch (SQLException e) {
-            throw new ServletException(e);
-        } catch (ClassNotFoundException e) {
             throw new ServletException(e);
         }
     }
@@ -78,23 +77,19 @@ public class ManterAdminController extends HttpServlet {
             Admin admin = new Admin(idAdmin, idAdmin, nome, email,
                     senha);
             if (operacao.equals("Incluir")) {
-                admin.gravar();
+                AdminDAO.getInstancia().save(admin);
             } else {
                 if (operacao.equals("Excluir")) {
-                    admin.excluir();
+                    AdminDAO.getInstancia().remove(idAdmin);
                 }
                 if (operacao.equals("Alterar")) {
-                    admin.alterar();
+                    AdminDAO.getInstancia().save(admin);
                 }
             }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaAdminController");
             view.forward(request, response);
         }
         catch (IOException e) {
-            throw new ServletException(e);
-        } catch (SQLException e) {
-            throw new ServletException(e);
-        } catch (ClassNotFoundException e) {
             throw new ServletException(e);
         }
     }

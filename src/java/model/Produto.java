@@ -5,6 +5,8 @@
  */
 package model;
 
+import dao.CategoriaDAO;
+import dao.FornecedorDAO;
 import dao.ProdutoDAO;
 import java.sql.SQLException;
 import java.util.List;
@@ -179,7 +181,8 @@ public class Produto {
 
     public Fornecedor getFornecedor() throws SQLException, ClassNotFoundException {
         if ((this.idFornecedor != 0)&& (this.fornecedor == null)){
-            this.fornecedor = Fornecedor.obterFornecedor(this.idFornecedor);
+            //this.fornecedor = Fornecedor.obterFornecedor(this.idFornecedor);
+            this.fornecedor = FornecedorDAO.getInstancia().findFornecedor(idFornecedor);
         }
         return fornecedor;
     }
@@ -190,7 +193,8 @@ public class Produto {
 
     public Categoria getCategoria() throws SQLException, ClassNotFoundException {
         if ((this.idCategoria != 0) && (this.categoria == null)){
-            this.categoria = Categoria.obterCategoria(this.idCategoria);
+            //this.categoria = Categoria.obterCategoria(this.idCategoria);
+            this.categoria = CategoriaDAO.getInstancia().findCategoria(idCategoria);
         }
         return categoria;
     }

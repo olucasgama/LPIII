@@ -5,6 +5,7 @@
  */
 package model;
 
+import dao.FornecedorDAO;
 import dao.OrdemServicoDAO;
 import java.sql.SQLException;
 import java.util.List;
@@ -84,7 +85,8 @@ public class OrdemServico {
 
     public Fornecedor getFornecedor() throws SQLException, ClassNotFoundException {
         if ((this.idFornecedor != 0)&& (this.fornecedor == null)){
-            this.fornecedor = Fornecedor.obterFornecedor(this.idFornecedor);
+            //this.fornecedor = Fornecedor.obterFornecedor(this.idFornecedor);
+            this.fornecedor = FornecedorDAO.getInstancia().findFornecedor(idFornecedor);
         }
         return fornecedor;
     }

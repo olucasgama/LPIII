@@ -5,6 +5,8 @@
  */
 package controller;
 
+import dao.ClienteDAO;
+import dao.UsuarioDAO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -99,8 +101,10 @@ public class ManterVendaController extends HttpServlet {
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
             request.setAttribute("pagamentos", FormaPagamento.obterFormasPagamentos());
-            request.setAttribute("clientes", Cliente.obterClientes());
-            request.setAttribute("usuarios", Usuario.obterUsuarios());
+            //request.setAttribute("clientes", Cliente.obterClientes());
+            request.setAttribute("clientes", ClienteDAO.getInstancia().findAllClientes());
+            //request.setAttribute("usuarios", Usuario.obterUsuarios());
+            request.setAttribute("usuarios", UsuarioDAO.getInstancia().findAllUsuarios());
             if(!operacao.equals("Incluir")){
                 int idVenda = Integer.parseInt(request.getParameter("idVenda"));
                 Venda venda = Venda.obterVenda(idVenda);
@@ -129,11 +133,13 @@ public class ManterVendaController extends HttpServlet {
         try{
             Cliente cliente = null;
             if(idCliente != 0){
-                cliente = Cliente.obterCliente(idCliente);
+                //cliente = Cliente.obterCliente(idCliente);
+                cliente = ClienteDAO.getInstancia().findCliente(idCliente);
             }
             Usuario usuario = null;
             if(idUsuario != 0){
-                usuario = Usuario.obterUsuario(idUsuario);
+                //usuario = Usuario.obterUsuario(idUsuario);
+                usuario = UsuarioDAO.getInstancia().findUsuario(idUsuario);
             }
             FormaPagamento formaPagamento = null;
             if(idFormaPgto != 0){
