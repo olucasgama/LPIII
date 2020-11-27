@@ -6,6 +6,8 @@
 package model;
 
 import dao.ItensVendaDAO;
+import dao.ProdutoDAO;
+import dao.VendaDAO;
 import java.sql.SQLException;
 import java.util.List;
 import javax.persistence.Entity;
@@ -68,7 +70,8 @@ public class ItemVenda {
 
     public Venda getVenda() throws SQLException, ClassNotFoundException {
         if ((this.idVenda != 0) && (this.venda == null)) {
-            this.venda = Venda.obterVenda(this.idVenda);
+            //this.venda = Venda.obterVenda(this.idVenda);
+            this.venda = VendaDAO.getInstancia().findVenda(idVenda);
         }
         return venda;
     }
@@ -87,7 +90,8 @@ public class ItemVenda {
 
     public Produto getProduto() throws SQLException, ClassNotFoundException {
         if ((this.idProduto != 0) && (this.produto == null)) {
-            this.produto = Produto.obterProduto(this.idProduto);
+            //this.produto = Produto.obterProduto(this.idProduto);
+            this.produto = ProdutoDAO.getInstancia().findProduto(idProduto);
         }
         return produto;
     }

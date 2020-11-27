@@ -5,6 +5,7 @@
  */
 package model;
 
+import dao.EnderecoDAO;
 import dao.FornecedorDAO;
 import java.sql.SQLException;
 import java.util.List;
@@ -112,7 +113,8 @@ public class Fornecedor {
 
     public Endereco getEndereco() throws SQLException, ClassNotFoundException {
         if((this.idEndereco !=0) && (this.endereco == null)){
-            this.endereco = Endereco.obterEndereco(this.idEndereco);
+            //this.endereco = Endereco.obterEndereco(this.idEndereco);
+            this.endereco = EnderecoDAO.getInstancia().findEndereco(idEndereco);
         }
         return endereco;
     }

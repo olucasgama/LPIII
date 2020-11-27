@@ -5,6 +5,9 @@
  */
 package model;
 
+import dao.ClienteDAO;
+import dao.FormaPagamentoDAO;
+import dao.UsuarioDAO;
 import dao.VendaDAO;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -100,9 +103,11 @@ public class Venda {
         this.situacao = situacao;
     }
 
+    
     public Usuario getUsuario() throws SQLException, ClassNotFoundException {
         if ((this.idUsuario != 0) && (this.usuario == null)){
-            this.usuario = Usuario.obterUsuario(this.idUsuario);
+            //this.usuario = Usuario.obterUsuario(this.idUsuario);
+            this.usuario = UsuarioDAO.getInstancia().findUsuario(this.idUsuario);
         }
         return usuario;
     }
@@ -113,7 +118,8 @@ public class Venda {
 
     public FormaPagamento getFormaPagamento() throws SQLException, ClassNotFoundException {
         if ((this.idFormaPgto != 0) && (this.formaPagamento == null)){
-            this.formaPagamento = FormaPagamento.obterFormaPagamento(this.idFormaPgto);
+            //this.formaPagamento = FormaPagamento.obterFormaPagamento(this.idFormaPgto);
+            this.formaPagamento = FormaPagamentoDAO.getInstancia().findFormaPagamento(idFormaPgto);
         }
         return formaPagamento;
     }
@@ -124,7 +130,8 @@ public class Venda {
 
     public Cliente getCliente() throws SQLException, ClassNotFoundException {
         if ((this.idCliente != 0) && (this.cliente == null)){
-            this.cliente = Cliente.obterCliente(this.idCliente);
+            //this.cliente = Cliente.obterCliente(this.idCliente);
+            this.cliente = ClienteDAO.getInstancia().findCliente(idCliente);
         }
         return cliente;
     }

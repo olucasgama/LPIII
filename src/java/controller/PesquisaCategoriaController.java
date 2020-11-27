@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.CategoriaDAO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -29,16 +30,9 @@ public class PesquisaCategoriaController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
-            try{
-                request.setAttribute("categorias", Categoria.obterCategorias());
-                RequestDispatcher view = request.getRequestDispatcher("/pesquisarCategoria.jsp");
-                view.forward(request, response);
-            }
-            catch(ClassNotFoundException e){
-                throw new ServletException(e);
-            }catch(SQLException e){
-                throw new ServletException(e);
-        }
+        request.setAttribute("categorias", CategoriaDAO.getInstancia().findAllCategorias());
+        RequestDispatcher view = request.getRequestDispatcher("/pesquisarCategoria.jsp");
+        view.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

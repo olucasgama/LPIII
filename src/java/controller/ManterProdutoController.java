@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.CategoriaDAO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -46,7 +47,9 @@ public class ManterProdutoController extends HttpServlet {
                 String operacao = request.getParameter("operacao");
                 request.setAttribute("operacao", operacao);
                 request.setAttribute("fornecedores", Fornecedor.obterFornecedores());
-                request.setAttribute("categorias", Categoria.obterCategorias());
+                //request.setAttribute("categorias", Categoria.obterCategorias());
+                request.setAttribute("categorias", CategoriaDAO.getInstancia().findAllCategorias());
+                
                 if (!operacao.equals("Incluir")){
                     int idProduto = Integer.parseInt(request.getParameter("idProduto"));
                     Produto produto = Produto.obterProduto(idProduto);
@@ -140,7 +143,8 @@ public class ManterProdutoController extends HttpServlet {
             }
             Categoria categoria = null;
             if(idCategoria != 0){
-                categoria = Categoria.obterCategoria(idCategoria);
+               //categoria = Categoria.obterCategoria(idCategoria);
+               categoria = CategoriaDAO.getInstancia().findCategoria(idCategoria);
             }
             
             Produto produto = new Produto(idProduto, nome, codInterno, codBarra,

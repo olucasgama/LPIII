@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.AdminDAO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -29,16 +30,9 @@ public class PesquisaAdminController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
-            try{
-                request.setAttribute("admins", Admin.obterAdmins());
-                RequestDispatcher view = request.getRequestDispatcher("/pesquisarAdmin.jsp");
-                view.forward(request, response);
-            }
-            catch(ClassNotFoundException e){
-                throw new ServletException(e);
-            }catch(SQLException e){
-                throw new ServletException(e);
-        }
+        request.setAttribute("admins", AdminDAO.getInstancia().findAllAdmins());
+        RequestDispatcher view = request.getRequestDispatcher("/pesquisarAdmin.jsp");
+        view.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
