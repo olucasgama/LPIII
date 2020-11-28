@@ -5,8 +5,8 @@
  */
 package controller;
 
+import dao.VendaDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -97,7 +97,7 @@ public class ManterDevolucaoController extends HttpServlet {
         try {
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
-            request.setAttribute("vendas", Venda.obterVendas());
+            request.setAttribute("vendas", VendaDAO.getInstancia().findAllVendas());
             request.setAttribute("produtos", Produto.obterProdutos());
             if(!operacao.equals("Incluir")){
                 int idPerdaDevolucao = Integer.parseInt(request.getParameter("idPerdaDevolucao"));
@@ -131,7 +131,7 @@ public class ManterDevolucaoController extends HttpServlet {
             }
             Venda venda = null;
             if (idVenda != 0) {
-                venda = Venda.obterVenda(idVenda);
+                venda = VendaDAO.getInstancia().findVenda(idVenda);
             }
             PerdaDevolucao perdaDevolucao = new PerdaDevolucao(idPerdaDevolucao,
                     tipo, produto, venda);

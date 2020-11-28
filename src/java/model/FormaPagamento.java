@@ -145,14 +145,6 @@ public class FormaPagamento {
         this.situacaoConfirmacao = situacaoConfirmacao;
     }
     
-    public static FormaPagamento obterFormaPagamento (int idFormaPgto) throws SQLException, ClassNotFoundException{
-        return FormaPagamentoDAO.getInstancia().findFormaPagamento(idFormaPgto);
-}
-    
-    public static List<FormaPagamento> obterFormasPagamentos() throws ClassNotFoundException, SQLException{
-        return FormaPagamentoDAO.getInstancia().findAllFormasPagamentos();
-    }
-    
     public void gravar() throws SQLException, ClassNotFoundException {
         FormaPagamentoDAO.getInstancia().save(this);
     }

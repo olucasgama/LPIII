@@ -5,10 +5,10 @@
  */
 package controller;
 
+import dao.ItensVendaDAO;
+import dao.VendaDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -109,7 +109,7 @@ public class ManterItensVendaController extends HttpServlet {
             }
             Venda venda = null;
             if (idVenda != 0) {
-                venda = Venda.obterVenda(idVenda);
+                venda = VendaDAO.getInstancia().findVenda(idVenda);
             }
             ItemVenda itensVenda = new ItemVenda(idItensVenda, quantidade, precoUnitario,
                     venda, produto);
@@ -128,7 +128,7 @@ public class ManterItensVendaController extends HttpServlet {
             }
             request.setAttribute("idVenda", idVenda);
             RequestDispatcher view = request.getRequestDispatcher("/pesquisarItensVenda.jsp");
-            request.setAttribute("itensVenda", ItemVenda.obterItensVenda(idVenda));
+            request.setAttribute("itensVenda", ItensVendaDAO.getInstancia().findItensDaVenda(idVenda));
             view.forward(request, response);
         } catch (SQLException | ClassNotFoundException e) {
             throw new ServletException(e);
@@ -140,10 +140,10 @@ public class ManterItensVendaController extends HttpServlet {
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
             request.setAttribute("produtos", Produto.obterProdutos());
-            request.setAttribute("vendas", Venda.obterVendas());
+            request.setAttribute("vendas", VendaDAO.getInstancia().findAllVendas());
             if (!operacao.equals("Incluir")) {
                 int idIntensVenda = Integer.parseInt(request.getParameter("idItensVenda"));
-                ItemVenda itensVenda = ItemVenda.obterItemVenda(idIntensVenda);
+                ItemVenda itensVenda = ItensVendaDAO.getInstancia().findItemVenda(idIntensVenda);
                 request.setAttribute("itensVenda", itensVenda);
             }
             int idVenda = Integer.parseInt(request.getParameter("idVenda"));

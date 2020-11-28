@@ -10,7 +10,6 @@ import dao.FormaPagamentoDAO;
 import dao.UsuarioDAO;
 import dao.VendaDAO;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -162,14 +161,6 @@ public class Venda {
 
     public void setIdCliente(int idCliente) {
         this.idCliente = idCliente;
-    }
-
-    public static Venda obterVenda (int idVenda) throws SQLException, ClassNotFoundException{
-        return VendaDAO.getInstancia().findVenda(idVenda);
-    }
-    
-    public static ArrayList<Venda> obterVendas() throws ClassNotFoundException, SQLException{
-        return (ArrayList<Venda>) VendaDAO.getInstancia().findAllVendas();
     }
     
     public void gravar() throws ClassNotFoundException, SQLException{

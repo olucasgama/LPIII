@@ -44,7 +44,7 @@ public class CategoriaDAO {
         EntityManager em = new ConexaoFactory().getConexao();
         List<Categoria> categorias = null;
         try {
-            categorias = em.createQuery("from categoria c").getResultList();
+            categorias = em.createQuery("from Categoria c").getResultList();
         } catch (Exception e) {
             System.err.println(e);
         } finally {

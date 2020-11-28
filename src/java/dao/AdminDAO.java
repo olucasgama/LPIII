@@ -44,7 +44,7 @@ public class AdminDAO {
         EntityManager em = new ConexaoFactory().getConexao();
         List<Admin> admins = null;
         try {
-            admins = em.createQuery("from admin c").getResultList();
+            admins = em.createQuery("from Admin c").getResultList();
         } catch (Exception e) {
             System.err.println(e);
         } finally {

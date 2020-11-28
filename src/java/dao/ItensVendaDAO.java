@@ -44,7 +44,7 @@ public class ItensVendaDAO {
         EntityManager em = new ConexaoFactory().getConexao();
         List<ItemVenda> itensVenda = null;
         try {
-            itensVenda = em.createQuery("from itensVenda i").getResultList();
+            itensVenda = em.createQuery("from ItemVenda iv").getResultList();
         } catch (Exception e) {
             System.err.println(e);
         } finally {

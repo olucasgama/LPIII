@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.FormaPagamentoDAO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -14,7 +15,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.FormaPagamento;
 
 public class PesquisaPagamentoController extends HttpServlet {
 
@@ -29,15 +29,9 @@ public class PesquisaPagamentoController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
-            try {
-                request.setAttribute("formasPagamento", FormaPagamento.obterFormasPagamentos());
-                RequestDispatcher view = request.getRequestDispatcher("/pesquisarPagamento.jsp");
-                view.forward(request, response);
-            }catch(ClassNotFoundException e){
-                throw new ServletException(e);
-            }catch(SQLException e){
-                throw new ServletException(e);
-            }
+        request.setAttribute("formasPagamento", FormaPagamentoDAO.getInstancia().findAllFormasPagamentos());
+        RequestDispatcher view = request.getRequestDispatcher("/pesquisarPagamento.jsp");
+        view.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

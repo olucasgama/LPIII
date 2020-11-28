@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.FormaPagamentoDAO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -45,7 +46,7 @@ public class ManterPagamentoController extends HttpServlet {
             request.setAttribute("operacao", operacao);
             if (!operacao.equals("Incluir")){
                 int idFormaPgto = Integer.parseInt(request.getParameter("idFormaPgto"));
-                FormaPagamento formaPagamento = FormaPagamento.obterFormaPagamento(idFormaPgto);
+                FormaPagamento formaPagamento = FormaPagamentoDAO.getInstancia().findFormaPagamento(idFormaPgto);
                 request.setAttribute("formaPagamento", formaPagamento);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterPagamento.jsp");

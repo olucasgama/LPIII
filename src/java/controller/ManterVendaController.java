@@ -6,7 +6,9 @@
 package controller;
 
 import dao.ClienteDAO;
+import dao.FormaPagamentoDAO;
 import dao.UsuarioDAO;
+import dao.VendaDAO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -100,21 +102,21 @@ public class ManterVendaController extends HttpServlet {
         try{
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
-            request.setAttribute("pagamentos", FormaPagamento.obterFormasPagamentos());
+            request.setAttribute("pagamentos", FormaPagamentoDAO.getInstancia().findAllFormasPagamentos());
             //request.setAttribute("clientes", Cliente.obterClientes());
             request.setAttribute("clientes", ClienteDAO.getInstancia().findAllClientes());
             //request.setAttribute("usuarios", Usuario.obterUsuarios());
             request.setAttribute("usuarios", UsuarioDAO.getInstancia().findAllUsuarios());
             if(!operacao.equals("Incluir")){
                 int idVenda = Integer.parseInt(request.getParameter("idVenda"));
-                Venda venda = Venda.obterVenda(idVenda);
+                Venda venda = VendaDAO.getInstancia().findVenda(idVenda);
                 request.setAttribute("venda", venda);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterVenda.jsp");
             view.forward(request, response);
         }catch(ServletException e){
             throw e;
-        }catch(IOException | SQLException | ClassNotFoundException e){
+        }catch(IOException e){
             throw new ServletException(e);
         }
     }
@@ -143,7 +145,7 @@ public class ManterVendaController extends HttpServlet {
             }
             FormaPagamento formaPagamento = null;
             if(idFormaPgto != 0){
-                formaPagamento = FormaPagamento.obterFormaPagamento(idFormaPgto);
+                formaPagamento = FormaPagamentoDAO.getInstancia().findFormaPagamento(idFormaPgto);
             }
             Venda venda = new Venda(idVenda, dataVenda, subTotal, codBarra, 
             valorDesconto, situacao, usuario, formaPagamento, cliente);

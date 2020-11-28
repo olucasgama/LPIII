@@ -44,7 +44,7 @@ public class ItensOrdemDAO {
         EntityManager em = new ConexaoFactory().getConexao();
         List<ItemOrdem> itensOrdem = null;
         try {
-            itensOrdem = em.createQuery("from itensOrdem i").getResultList();
+            itensOrdem = em.createQuery("from ItemOrdem io").getResultList();
         } catch (Exception e) {
             System.err.println(e);
         } finally {

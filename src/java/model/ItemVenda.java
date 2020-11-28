@@ -9,12 +9,10 @@ import dao.ItensVendaDAO;
 import dao.ProdutoDAO;
 import dao.VendaDAO;
 import java.sql.SQLException;
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 @Entity
@@ -107,24 +105,12 @@ public class ItemVenda {
     public void setIdProduto(int idProduto) {
         this.idProduto = idProduto;
     }
-
-    public static List<ItemVenda> obterItensVenda(int idVenda) throws SQLException, ClassNotFoundException {
-        return (List<ItemVenda>) ItensVendaDAO.getInstancia().findItensDaVenda(idVenda);
-    }
-
-    public static List<ItemVenda> obterItensVendas() throws ClassNotFoundException, SQLException {
-        return ItensVendaDAO.getInstancia().findAllItemVendas();
-    }
-
-       public static ItemVenda obterItemVenda(Integer idItensVenda) throws ClassNotFoundException, SQLException {
-        return ItensVendaDAO.getInstancia().findItemVenda(idItensVenda);
-    }
-
+    
     public void gravar() throws SQLException, ClassNotFoundException {
         ItensVendaDAO.getInstancia().save(this);
     }
 
-       public void excluir() throws ClassNotFoundException, SQLException{
+    public void excluir() throws ClassNotFoundException, SQLException{
         ItensVendaDAO.getInstancia().remove(idItemVenda);
     }
 

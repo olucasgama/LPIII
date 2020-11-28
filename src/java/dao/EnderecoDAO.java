@@ -44,7 +44,7 @@ public class EnderecoDAO {
         EntityManager em = new ConexaoFactory().getConexao();
         List<Endereco> enderecos = null;
         try {
-            enderecos = em.createQuery("from endereco e").getResultList();
+            enderecos = em.createQuery("from Endereco e").getResultList();
         } catch (Exception e) {
             System.err.println(e);
         } finally {

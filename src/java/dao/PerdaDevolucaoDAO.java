@@ -44,7 +44,7 @@ public class PerdaDevolucaoDAO {
         EntityManager em = new ConexaoFactory().getConexao();
         List<PerdaDevolucao> perdaDevolucoes = null;
         try {
-            perdaDevolucoes = em.createQuery("from perdaDevolucao p").getResultList();
+            perdaDevolucoes = em.createQuery("from PerdaDevolucao pd").getResultList();
         } catch (Exception e) {
             System.err.println(e);
         } finally {

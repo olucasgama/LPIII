@@ -69,6 +69,7 @@ public class Usuario implements Serializable {
         this.senha = senha;
     }
 
+    /*
     public static Usuario obterUsuario(int idUsuario) throws SQLException, ClassNotFoundException {
         return UsuarioDAO.getInstancia().findUsuario(idUsuario);
     }
@@ -87,5 +88,5 @@ public class Usuario implements Serializable {
 
     public void alterar() throws ClassNotFoundException, SQLException {
         UsuarioDAO.getInstancia().save(this);
-    }
+    }*/
 }

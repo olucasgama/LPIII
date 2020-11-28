@@ -200,6 +200,7 @@ public class Cliente {
         this.idEndereco = idEndereco;
     }
     
+    /*
     public static Cliente obterCliente (int idCliente) throws SQLException, ClassNotFoundException{
         return ClienteDAO.getInstancia().findCliente(idCliente);
     }
@@ -217,5 +218,5 @@ public class Cliente {
     
     public void gravar() throws ClassNotFoundException, SQLException{
         ClienteDAO.getInstancia().save(this);
-    }
+    }*/
 }

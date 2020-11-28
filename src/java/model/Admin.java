@@ -16,6 +16,10 @@ import javax.persistence.PrimaryKeyJoinColumn;
 public class Admin extends Usuario{
     
     private Integer idAdmin;
+    
+    public Admin(){
+    
+    }
 
     public Admin(Integer idAdmin, Integer idUsuario, String nome, String email, String senha) {
         super(idUsuario, nome, email, senha);
@@ -33,7 +37,8 @@ public class Admin extends Usuario{
     public void setIdAdmin(int idAdmin) {
         this.idAdmin = idAdmin;
     }
-   public static Admin obterAdmin(int idAdmin) throws SQLException, ClassNotFoundException {
+    
+    /*public static Admin obterAdmin(int idAdmin) throws SQLException, ClassNotFoundException {
         return AdminDAO.getInstancia().findAdmin(idAdmin);
     }
 
@@ -54,5 +59,5 @@ public class Admin extends Usuario{
     @Override
     public void alterar() throws ClassNotFoundException, SQLException {
         AdminDAO.getInstancia().save(this);
-    }
+    }*/
 }

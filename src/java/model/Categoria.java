@@ -46,14 +46,6 @@ public class Categoria {
         this.descricao = descricao;
     }
     
-    public static Categoria obterCategoria (int idCategoria) throws SQLException, ClassNotFoundException{
-        return CategoriaDAO.getInstancia().findCategoria(idCategoria);
-    }
-    
-    public static List<Categoria> obterCategorias() throws ClassNotFoundException, SQLException{
-        return CategoriaDAO.getInstancia().findAllCategorias();
-    }
-    
     public void gravar() throws SQLException, ClassNotFoundException {
         CategoriaDAO.getInstancia().save(this);
     }
@@ -64,5 +56,5 @@ public class Categoria {
     
     public void alterar() throws ClassNotFoundException, SQLException{
         CategoriaDAO.getInstancia().save(this);
-    }
+}
 }

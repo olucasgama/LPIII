@@ -5,8 +5,8 @@
  */
 package controller;
 
+import dao.VendaDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,7 +15,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.Venda;
 
 public class PesquisaVendaController extends HttpServlet {
 
@@ -32,13 +31,9 @@ public class PesquisaVendaController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
-        try {
-            request.setAttribute("vendas", Venda.obterVendas());
-            RequestDispatcher view = request.getRequestDispatcher("/pesquisarVenda.jsp");
-            view.forward(request, response);
-        } catch (ClassNotFoundException | SQLException e) {
-            throw new ServletException(e);
-        }
+        request.setAttribute("vendas", VendaDAO.getInstancia().findAllVendas());
+        RequestDispatcher view = request.getRequestDispatcher("/pesquisarVenda.jsp");
+        view.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
