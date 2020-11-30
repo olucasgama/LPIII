@@ -6,6 +6,7 @@
 package controller;
 
 import dao.CategoriaDAO;
+import dao.FornecedorDAO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -46,7 +47,7 @@ public class ManterProdutoController extends HttpServlet {
             try{
                 String operacao = request.getParameter("operacao");
                 request.setAttribute("operacao", operacao);
-                request.setAttribute("fornecedores", Fornecedor.obterFornecedores());
+                request.setAttribute("fornecedores", FornecedorDAO.getInstancia().findAllFornecedors());
                 //request.setAttribute("categorias", Categoria.obterCategorias());
                 request.setAttribute("categorias", CategoriaDAO.getInstancia().findAllCategorias());
                 
@@ -139,7 +140,7 @@ public class ManterProdutoController extends HttpServlet {
         try{
             Fornecedor fornecedor = null;
             if(idFornecedor != 0){
-                fornecedor = Fornecedor.obterFornecedor(idFornecedor);
+                fornecedor = FornecedorDAO.getInstancia().findFornecedor(idFornecedor);
             }
             Categoria categoria = null;
             if(idCategoria != 0){

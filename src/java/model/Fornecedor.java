@@ -130,14 +130,6 @@ public class Fornecedor {
     public void setIdEndereco(int idEndereco) {
         this.idEndereco = idEndereco;
     }
-    
-   public static Fornecedor obterFornecedor(int idFornecedor) throws SQLException, ClassNotFoundException {
-        return FornecedorDAO.getInstancia().findFornecedor(idFornecedor);
-    }
-
-    public static List<Fornecedor> obterFornecedores() throws ClassNotFoundException, SQLException {
-        return FornecedorDAO.getInstancia().findAllFornecedors();
-    }
 
     public void gravar() throws SQLException, ClassNotFoundException {
         FornecedorDAO.getInstancia().save(this);

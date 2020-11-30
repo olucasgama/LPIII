@@ -5,8 +5,8 @@
  */
 package controller;
 
+import dao.FornecedorDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,8 +15,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.rowset.serial.SerialException;
-import model.Fornecedor;
 
 public class PesquisaFornecedorController extends HttpServlet {
 
@@ -31,15 +29,9 @@ public class PesquisaFornecedorController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
-        try{
-            request.setAttribute("fornecedores", Fornecedor.obterFornecedores());
-            RequestDispatcher view = request.getRequestDispatcher("/pesquisarFornecedor.jsp");
-            view.forward(request, response);
-        }catch (ClassNotFoundException e){
-            throw new ServletException(e);
-        }catch (SQLException e){
-            throw new ServletException(e);
-        }
+        request.setAttribute("fornecedores", FornecedorDAO.getInstancia().findAllFornecedors());
+        RequestDispatcher view = request.getRequestDispatcher("/pesquisarFornecedor.jsp");
+        view.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

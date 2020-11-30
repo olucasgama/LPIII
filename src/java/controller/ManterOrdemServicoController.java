@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.FornecedorDAO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -97,7 +98,7 @@ public class ManterOrdemServicoController extends HttpServlet {
         try{
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
-            request.setAttribute("fornecedores", Fornecedor.obterFornecedores());
+            request.setAttribute("fornecedores", FornecedorDAO.getInstancia().findAllFornecedors());
             if (!operacao.equals("Incluir")){
                 int idOrdemSrv  = Integer.parseInt(request.getParameter("idOrdemSrv"));
                 OrdemServico ordemServico = OrdemServico.obterOrdemServico(idOrdemSrv);
@@ -124,7 +125,7 @@ public class ManterOrdemServicoController extends HttpServlet {
         try{
             Fornecedor fornecedor = null;
             if(idFornecedor != 0){
-                fornecedor = Fornecedor.obterFornecedor(idFornecedor);
+                fornecedor = FornecedorDAO.getInstancia().findFornecedor(idFornecedor);
             }
             OrdemServico ordemServico = new OrdemServico(idOrdemSrv, dataPedido, 
                     situacao, descricao, numOS, fornecedor);

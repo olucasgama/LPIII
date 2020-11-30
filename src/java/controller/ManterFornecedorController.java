@@ -6,8 +6,8 @@
 package controller;
 
 import dao.EnderecoDAO;
+import dao.FornecedorDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -101,7 +101,7 @@ public class ManterFornecedorController extends HttpServlet {
             request.setAttribute("enderecos", EnderecoDAO.getInstancia().findAllEnderecos());
             if(!operacao.equals("Incluir")){
                 int idFornecedor = Integer.parseInt(request.getParameter("idFornecedor"));
-                Fornecedor fornecedor = Fornecedor.obterFornecedor(idFornecedor);
+                Fornecedor fornecedor = FornecedorDAO.getInstancia().findFornecedor(idFornecedor);
                 request.setAttribute("fornecedor", fornecedor);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterFornecedor.jsp");
@@ -111,12 +111,6 @@ public class ManterFornecedorController extends HttpServlet {
             throw e;
         }
         catch(IOException e){
-            throw new ServletException(e);
-        }
-         catch(SQLException e){
-            throw new ServletException(e);
-        }
-        catch(ClassNotFoundException e){
             throw new ServletException(e);
         }
     }
