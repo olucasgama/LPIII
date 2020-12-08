@@ -5,8 +5,11 @@
  */
 package controller;
 
+import dao.PerdaDevolucaoDAO;
+import dao.ProdutoDAO;
 import dao.VendaDAO;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,6 +24,8 @@ import model.Venda;
 
 public class ManterDevolucaoController extends HttpServlet {
 
+    private PerdaDevolucao perdaDevolucao;
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -93,15 +98,16 @@ public class ManterDevolucaoController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    private void prepararOperacao(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException {
         try {
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
             request.setAttribute("vendas", VendaDAO.getInstancia().findAllVendas());
-            request.setAttribute("produtos", Produto.obterProdutos());
+            request.setAttribute("produtos", ProdutoDAO.getInstancia().findAllProdutos());
             if(!operacao.equals("Incluir")){
                 int idPerdaDevolucao = Integer.parseInt(request.getParameter("idPerdaDevolucao"));
-                PerdaDevolucao perdaDevolucao = PerdaDevolucao.obterPerdaDevolucao(idPerdaDevolucao);
+                perdaDevolucao = PerdaDevolucaoDAO.getInstancia().findPerdaDevolucao(idPerdaDevolucao);
                 request.setAttribute("perdaDevolucao", perdaDevolucao);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterDevolucao.jsp");
@@ -110,48 +116,37 @@ public class ManterDevolucaoController extends HttpServlet {
             throw e;
         } catch (IOException e) {
             throw new ServletException(e);
-        } catch (SQLException e) {
-            throw new ServletException(e);
-        } catch (ClassNotFoundException e) {
-            throw new ServletException(e);
         }
     }
 
-    public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws SQLException, ClassNotFoundException, ServletException {
+    public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) 
+            throws SQLException, ClassNotFoundException, ServletException { 
+        try {
         String operacao = request.getParameter("operacao");
-        int idPerdaDevolucao = Integer.parseInt(request.getParameter("numIdPerdaDevolucao"));
         String tipo = request.getParameter("optTipo");
         int idProduto = operacao.equals("Excluir") ? 0 : Integer.parseInt(request.getParameter("optProduto"));
         int idVenda = operacao.equals("Excluir") ? 0 : Integer.parseInt(request.getParameter("optVenda"));
-
-        try {
-            Produto produto = null;
-            if (idProduto != 0) {
-                produto = Produto.obterProduto(idProduto);
-            }
-            Venda venda = null;
-            if (idVenda != 0) {
-                venda = VendaDAO.getInstancia().findVenda(idVenda);
-            }
-            PerdaDevolucao perdaDevolucao = new PerdaDevolucao(idPerdaDevolucao,
-                    tipo, produto, venda);
-            if (operacao.equals("Incluir")) {
-                perdaDevolucao.gravar();
-            }else{
-                if(operacao.equals("Excluir")){
-                    perdaDevolucao.excluir();
-                }
-                if(operacao.equals("Alterar")){
-                    perdaDevolucao.alterar();
-                }
-            }
-            RequestDispatcher view = request.getRequestDispatcher("PesquisaDevolucaoController");
-            view.forward(request, response);
+        Produto produto = null;
+        if (idProduto != 0) {
+            produto = ProdutoDAO.getInstancia().findProduto(idProduto);
+        }
+        Venda venda = null;
+        if (idVenda != 0) {
+        venda = VendaDAO.getInstancia().findVenda(idVenda);
+        }
+        if (operacao.equals("Incluir")) {
+            perdaDevolucao = new PerdaDevolucao(tipo, produto, venda);
+            PerdaDevolucaoDAO.getInstancia().save(perdaDevolucao);
+        }else if(operacao.equals("Excluir")){
+            PerdaDevolucaoDAO.getInstancia().remove(perdaDevolucao.getIdPerdaDevolucao());
+        }else if(operacao.equals("Alterar")){
+            perdaDevolucao.setTipo(tipo);
+            perdaDevolucao.setProduto(produto);
+            perdaDevolucao.setVenda(venda);
+        }
+        RequestDispatcher view = request.getRequestDispatcher("PesquisaDevolucaoController");
+        view.forward(request, response);
         } catch (IOException e) {
-            throw new ServletException(e);
-        } catch (SQLException e) {
-            throw new ServletException(e);
-        } catch (ClassNotFoundException e) {
             throw new ServletException(e);
         }
     }

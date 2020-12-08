@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.ProdutoDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -30,16 +31,10 @@ public class PesquisaProdutoController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
-            try{
-                request.setAttribute("produtos", Produto.obterProdutos());
-                RequestDispatcher view = request.getRequestDispatcher("/pesquisarProduto.jsp");
-                view.forward(request, response);
-            }
-            catch(ClassNotFoundException e){
-                throw new ServletException(e);
-            }catch(SQLException e){
-                throw new ServletException(e);
-    }
+        //request.setAttribute("produtos", Produto.obterProdutos());
+        request.setAttribute("produtos", ProdutoDAO.getInstancia().findAllProdutos());
+        RequestDispatcher view = request.getRequestDispatcher("/pesquisarProduto.jsp");
+        view.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

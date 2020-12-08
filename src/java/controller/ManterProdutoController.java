@@ -7,6 +7,7 @@ package controller;
 
 import dao.CategoriaDAO;
 import dao.FornecedorDAO;
+import dao.ProdutoDAO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -22,6 +23,8 @@ import model.Produto;
 
 public class ManterProdutoController extends HttpServlet {
 
+    private Produto produto;
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -48,25 +51,20 @@ public class ManterProdutoController extends HttpServlet {
                 String operacao = request.getParameter("operacao");
                 request.setAttribute("operacao", operacao);
                 request.setAttribute("fornecedores", FornecedorDAO.getInstancia().findAllFornecedors());
-                //request.setAttribute("categorias", Categoria.obterCategorias());
                 request.setAttribute("categorias", CategoriaDAO.getInstancia().findAllCategorias());
-                
                 if (!operacao.equals("Incluir")){
-                    int idProduto = Integer.parseInt(request.getParameter("idProduto"));
-                    Produto produto = Produto.obterProduto(idProduto);
+                    Integer idProduto = Integer.parseInt(request.getParameter("idProduto"));
+                    produto = ProdutoDAO.getInstancia().findProduto(idProduto);
                     request.setAttribute("produto", produto);
                 }
                 RequestDispatcher view = request.getRequestDispatcher("/manterProduto.jsp");
                 view.forward(request, response);
             }catch(ServletException e){
                 throw e;
-            }catch(IOException | SQLException | ClassNotFoundException e){
+            }catch(IOException e){
                 throw new ServletException(e);
             }
         }    
-    
-
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -117,58 +115,66 @@ public class ManterProdutoController extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
-    public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws SQLException, ClassNotFoundException, ServletException, IOException{
-        String operacao = request.getParameter("operacao");
-        int idProduto = Integer.parseInt(request.getParameter("numIdProduto"));
-        String nome = request.getParameter("nomeProduto");
-        int codInterno = Integer.parseInt(request.getParameter("numCodInterno"));
-        int codBarra = Integer.parseInt(request.getParameter("numCodBarra"));
-        String unidadeMedida = request.getParameter("nomeUnidadeMedida");
-        float precoCompra = Float.parseFloat(request.getParameter("precoCompra"));
-        float peso = Float.parseFloat(request.getParameter("peso"));
-        float altura = Float.parseFloat(request.getParameter("altura"));
-        float comprimento = Float.parseFloat(request.getParameter("comprimento"));
-        String validade = request.getParameter("validade");
-        int qtdMinima = Integer.parseInt(request.getParameter("qtdMinima"));
-        int qtdAtual = Integer.parseInt(request.getParameter("qtdAtual"));
-        int qtdMaxima = Integer.parseInt(request.getParameter("qtdMaxima"));
-        float largura = Float.parseFloat(request.getParameter("largura"));
-        int idFornecedor = operacao.equals("Excluir") ? 0 : Integer.parseInt(request.getParameter("optFornecedor"));
-        int idCategoria = operacao.equals("Excluir") ? 0 : Integer.parseInt(request.getParameter("optCategoria"));
-        
+    
+    public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) 
+            throws SQLException, ClassNotFoundException, ServletException, IOException{
         try{
+            String operacao = request.getParameter("operacao");
+            //int idProduto = Integer.parseInt(request.getParameter("numIdProduto"));
+            String nome = request.getParameter("nomeProduto");
+            int codInterno = Integer.parseInt(request.getParameter("numCodInterno"));
+            int codBarra = Integer.parseInt(request.getParameter("numCodBarra"));
+            String unidadeMedida = request.getParameter("nomeUnidadeMedida");
+            float precoCompra = Float.parseFloat(request.getParameter("precoCompra"));
+            float peso = Float.parseFloat(request.getParameter("peso"));
+            float altura = Float.parseFloat(request.getParameter("altura"));
+            float comprimento = Float.parseFloat(request.getParameter("comprimento"));
+            String validade = request.getParameter("validade");
+            int qtdMinima = Integer.parseInt(request.getParameter("qtdMinima"));
+            int qtdAtual = Integer.parseInt(request.getParameter("qtdAtual"));
+            int qtdMaxima = Integer.parseInt(request.getParameter("qtdMaxima"));
+            float largura = Float.parseFloat(request.getParameter("largura"));
+            int idFornecedor = operacao.equals("Excluir") ? 0 : Integer.parseInt(request.getParameter("optFornecedor"));
+            int idCategoria = operacao.equals("Excluir") ? 0 : Integer.parseInt(request.getParameter("optCategoria"));
             Fornecedor fornecedor = null;
             if(idFornecedor != 0){
                 fornecedor = FornecedorDAO.getInstancia().findFornecedor(idFornecedor);
             }
             Categoria categoria = null;
             if(idCategoria != 0){
-               //categoria = Categoria.obterCategoria(idCategoria);
-               categoria = CategoriaDAO.getInstancia().findCategoria(idCategoria);
-            }
-            
-            Produto produto = new Produto(idProduto, nome, codInterno, codBarra,
+                //categoria = Categoria.obterCategoria(idCategoria);
+                categoria = CategoriaDAO.getInstancia().findCategoria(idCategoria);
+            }if(operacao.equals("Incluir")){
+                produto = new Produto(/*idProduto,*/ nome, codInterno, codBarra,
                     unidadeMedida, precoCompra, peso, altura, comprimento, validade,
                     qtdMinima, qtdAtual, qtdMaxima, largura, fornecedor, categoria);
-            if(operacao.equals("Incluir")){
-                produto.gravar();
-            }else{
-                if (operacao.equals("Alterar")){
-                    produto.alterar();
-                }else{
-                    if (operacao.equals("Excluir")){
-                        produto.excluir();
-                    }
-                }
+                ProdutoDAO.getInstancia().save(produto);
+//                produto.gravar();
+            }else if (operacao.equals("Alterar")){
+                produto.setNome(nome);
+                produto.setCodInterno(codInterno);
+                produto.setCodBarra(codBarra);
+                produto.setUnidadeMedida(unidadeMedida);
+                produto.setPrecoCompra(precoCompra);
+                produto.setPeso(peso);
+                produto.setAltura(altura);
+                produto.setComprimento(comprimento);
+                produto.setQtdAtual(qtdAtual);
+                produto.setCategoria(categoria);
+                produto.setFornecedor(fornecedor);
+                produto.setLargura(largura);
+                produto.setQtdMaxima(qtdMaxima);
+                produto.setQtdMinima(qtdMinima);
+                ProdutoDAO.getInstancia().save(produto);
+//                    produto.alterar();
+            }else if (operacao.equals("Excluir")){
+                    ProdutoDAO.getInstancia().remove(produto.getIdProduto());
+//                        produto.excluir();
             }
-            RequestDispatcher view = request.getRequestDispatcher("PesquisaProdutoController");
-            view.forward(request, response);
-        }
-        catch(SQLException | ClassNotFoundException e){
+        RequestDispatcher view = request.getRequestDispatcher("PesquisaProdutoController");
+        view.forward(request, response);
+        } catch (IOException e){
             throw new ServletException(e);
-        }
+        }  
     }
-    
-    
 }

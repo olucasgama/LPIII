@@ -90,10 +90,6 @@
 
                 var mensagem;
                 mensagem = "";
-
-                if (form.numIdCliente.value == "") {
-                    mensagem = mensagem + "Informe o Id do Cliente\n";
-                }
                 if (frmManterCliente.optEndereco.selectedIndex == 0) {
                     mensagem = mensagem + "Informe o endereço\n";
                 }
@@ -117,8 +113,6 @@
         <form action="ManterClienteController?acao=confirmarOperacao&operacao=${operacao}" method="post" name="frmManterCliente" onsubmit="return validarFormulario(this)">
             <table>
                 <tr>
-                    <td><label>ID Cliente: </label>
-                        <input type="number" name="numIdCliente" value="${cliente.idCliente}" <c:if test="${operacao != 'Incluir'}"> readonly</c:if>></td>
                         <td><label>Nome: </label>
                             <input type="text" name="txtNome" value="${cliente.nome}" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>></td>          
                         <td><input type="radio" name="tipoPessoa"  onclick="juridica()">Pessoa Juridica<br>

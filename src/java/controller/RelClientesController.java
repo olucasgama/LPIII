@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.BD;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -42,15 +43,14 @@ public class RelClientesController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) {
         Connection conexao = null;
             try {
-                Class.forName("com.mysql.jdbc.Driver");
-                conexao = DriverManager.getConnection("jdbc:mysql://localhost/sgmc", "root", "");
+                conexao = BD.getConexao();
                 HashMap parametros = new HashMap();
                 parametros.put("CLI1", Integer.parseInt(request.getParameter("txtCodClienteInicio")));
                 parametros.put("CLI2", Integer.parseInt(request.getParameter("txtCodClienteFim")));
-                String relatorio = getServletContext().getRealPath("/WEB-INF") + "/Rel.Clientes.jasper";
+                String relatorio = getServletContext().getRealPath("/WEB-INF") + "/relCliente.jasper";
                 JasperPrint jp = JasperFillManager.fillReport(relatorio, parametros, conexao);
                 byte[] relat = JasperExportManager.exportReportToPdf(jp);
-                response.setHeader("Content-Disposition", "attachment;filename=relClientes.pdf");
+                response.setHeader("Content-Disposition", "attachment;filename=relCliente.pdf");
                 response.setContentType("application/pdf");
                 response.getOutputStream().write(relat);
             } catch (SQLException ex) {

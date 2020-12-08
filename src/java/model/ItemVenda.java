@@ -5,9 +5,6 @@
  */
 package model;
 
-import dao.ItensVendaDAO;
-import dao.ProdutoDAO;
-import dao.VendaDAO;
 import java.sql.SQLException;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,14 +22,11 @@ public class ItemVenda {
     private float precoUnitario;
     @ManyToOne
     private Venda venda;
-    private int idVenda;
     @ManyToOne
     private Produto produto;
-    private int idProduto;
 
-    public ItemVenda(Integer idItemVenda, int quantidade, float precoUnitario,
+    public ItemVenda(int quantidade, float precoUnitario,
             Venda venda, Produto produto) {
-        this.idItemVenda = idItemVenda;
         this.quantidade = quantidade;
         this.precoUnitario = precoUnitario;
         this.venda = venda;
@@ -42,11 +36,11 @@ public class ItemVenda {
     public ItemVenda() {
     }
 
-    public Integer getIdItensVenda() {
+    public Integer getIdItemVenda() {
         return idItemVenda;
     }
 
-    public void setIdItensVenda(Integer idItemVenda) {
+    public void setIdItemVenda(Integer idItemVenda) {
         this.idItemVenda = idItemVenda;
     }
 
@@ -67,10 +61,6 @@ public class ItemVenda {
     }
 
     public Venda getVenda() throws SQLException, ClassNotFoundException {
-        if ((this.idVenda != 0) && (this.venda == null)) {
-            //this.venda = Venda.obterVenda(this.idVenda);
-            this.venda = VendaDAO.getInstancia().findVenda(idVenda);
-        }
         return venda;
     }
 
@@ -78,43 +68,11 @@ public class ItemVenda {
         this.venda = venda;
     }
 
-    public int getIdVenda() {
-        return idVenda;
-    }
-
-    public void setIdVenda(int idVenda) {
-        this.idVenda = idVenda;
-    }
-
     public Produto getProduto() throws SQLException, ClassNotFoundException {
-        if ((this.idProduto != 0) && (this.produto == null)) {
-            //this.produto = Produto.obterProduto(this.idProduto);
-            this.produto = ProdutoDAO.getInstancia().findProduto(idProduto);
-        }
         return produto;
     }
 
     public void setProduto(Produto produto) {
         this.produto = produto;
-    }
-
-    public int getIdProduto() {
-        return idProduto;
-    }
-
-    public void setIdProduto(int idProduto) {
-        this.idProduto = idProduto;
-    }
-    
-    public void gravar() throws SQLException, ClassNotFoundException {
-        ItensVendaDAO.getInstancia().save(this);
-    }
-
-    public void excluir() throws ClassNotFoundException, SQLException{
-        ItensVendaDAO.getInstancia().remove(idItemVenda);
-    }
-
-    public void alterar() throws SQLException, ClassNotFoundException {
-        ItensVendaDAO.getInstancia().save(this);
     }
 }

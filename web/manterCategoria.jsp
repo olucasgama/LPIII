@@ -9,9 +9,6 @@
             function validarFormulario(form) { 
                 var mensagem;
                 mensagem = "";
-                if (form.numIdCategoria.value == ""){
-                    mensagem = mensagem + "Informe o Id da Categoria\n";
-                }
                 if (form.txtDescricao.value == ""){
                     mensagem = mensagem + "Informe o descrição\n";
                 }
@@ -28,11 +25,6 @@
         <h1>Manter Categoria - ${operacao}</h1>
         <form action="ManterCategoriaController?acao=confirmarOperacao&operacao=${operacao}" method="post" name="frmManterCategoria" onsubmit="return validarFormulario(this)">
             <table>
-                <tr>
-                    <td><label> ID: </label>
-                        <input type="number" name="numIdCategoria" value="${categoria.idCategoria}" <c:if test="${operacao != 'Incluir'}"> readonly</c:if>></td>
-                </tr>          
-                <tr><td></td></tr> 
                 <tr>
                     <td><label> Descrição: </label>
                         <input type="text" name="txtDescricao" value="${categoria.descricao}" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>

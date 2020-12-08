@@ -29,10 +29,8 @@
                 <td>
                     <c:out value="${admin.email}" />
                 </td>
-                <td><a href="ManterAdminController?acao=prepararOperacao&operacao=Excluir&idAdmin=<c:out value="
-                        ${admin.idAdmin}" />">Excluir</a></td>
-                <td><a href="ManterAdminController?acao=prepararOperacao&operacao=Alterar&idAdmin=<c:out value="
-                        ${admin.idAdmin}" />">Alterar</a></td>
+                <td><a href="ManterAdminController?acao=prepararOperacao&operacao=Excluir&idAdmin=<c:out value="${admin.idUsuario}" />">Excluir</a></td>
+                <td><a href="ManterAdminController?acao=prepararOperacao&operacao=Alterar&idAdmin=<c:out value="${admin.idUsuario}" />">Alterar</a></td>
             </tr>
         </c:forEach>
     </table>
@@ -47,10 +45,9 @@
     <table class="table-input">
         <tr>
             <td><input type="submit" name="btnVoltar" value="Voltar"
-                    onclick="window.location.href='http://localhost:8000/SGMC/'"></td>
+                    onclick="window.location.href='http://localhost:8080/SGMC/'"></td>
         </tr>
     </table>
-
 </body>
 
 </html>

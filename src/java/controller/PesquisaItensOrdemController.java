@@ -5,8 +5,8 @@
  */
 package controller;
 
+import dao.ItensOrdemDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,7 +15,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.ItemOrdem;
 
 public class PesquisaItensOrdemController extends HttpServlet {
 
@@ -31,14 +30,10 @@ public class PesquisaItensOrdemController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
         int idOrdemSrv = Integer.parseInt(request.getParameter("idOrdemSrv"));
-        try{
-            request.setAttribute("idOrdemSrv", idOrdemSrv);
-            request.setAttribute("itensOrdens", ItemOrdem.obterItensOrdem(idOrdemSrv));
-            RequestDispatcher view = request.getRequestDispatcher("/pesquisarItensOrdem.jsp");
-            view.forward(request, response);
-        }catch (ClassNotFoundException | SQLException e){
-            throw new ServletException(e);
-        }
+        request.setAttribute("idOrdemSrv", idOrdemSrv);
+        request.setAttribute("itensOrdens", ItensOrdemDAO.getInstancia().findAllItensOrdem(idOrdemSrv));
+        RequestDispatcher view = request.getRequestDispatcher("/pesquisarItensOrdem.jsp");
+        view.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

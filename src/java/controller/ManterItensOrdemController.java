@@ -5,8 +5,10 @@
  */
 package controller;
 
+import dao.ItensOrdemDAO;
+import dao.OrdemServicoDAO;
+import dao.ProdutoDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,6 +22,8 @@ import model.OrdemServico;
 import model.Produto;
 
 public class ManterItensOrdemController extends HttpServlet {
+
+    private ItemOrdem itensOrdem;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -45,38 +49,40 @@ public class ManterItensOrdemController extends HttpServlet {
     }
 
     private void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws SQLException, ClassNotFoundException, ServletException, IOException {
-        String operacao = request.getParameter("operacao");
-        int idItensOrdem = Integer.parseInt(request.getParameter("numIdItensOrdem"));
-        int idOrdemSrv = Integer.parseInt(request.getParameter("idOrdemSrv"));
-        int quantidade = Integer.parseInt(request.getParameter("numQuantidade"));
-        int idProduto = Integer.parseInt(request.getParameter("optProduto"));
-
         try {
+            String operacao = request.getParameter("operacao");
+            int idOrdemSrv = Integer.parseInt(request.getParameter("idOrdemSrv"));
+            int quantidade = Integer.parseInt(request.getParameter("numQuantidade"));
+            int idProduto = Integer.parseInt(request.getParameter("optProduto"));
+
             Produto produto = null;
             if (idProduto != 0) {
-                produto = Produto.obterProduto(idProduto);
+                produto = ProdutoDAO.getInstancia().findProduto(idProduto);
             }
             OrdemServico ordemServico = null;
             if (idOrdemSrv != 0) {
-                ordemServico = OrdemServico.obterOrdemServico(idOrdemSrv);
+                ordemServico = OrdemServicoDAO.getInstancia().findOrdemServico(idOrdemSrv);
             }
-            ItemOrdem itensOrdem = new ItemOrdem(idItensOrdem, quantidade, produto, ordemServico);
             if (operacao.equals("Incluir")) {
-                itensOrdem.gravar();
+                itensOrdem = new ItemOrdem(quantidade, produto, ordemServico);
+                ItensOrdemDAO.getInstancia().save(itensOrdem);
             } else {
                 if (operacao.equals("Alterar")) {
-                    itensOrdem.alterar();
+                    itensOrdem.setOrdemServico(ordemServico);
+                    itensOrdem.setProduto(produto);
+                    itensOrdem.setQuantidade(quantidade);
+                    ItensOrdemDAO.getInstancia().save(itensOrdem);
                 } else {
                     if (operacao.equals("Excluir")) {
-                        itensOrdem.excluir();
+                        ItensOrdemDAO.getInstancia().remove(itensOrdem.getIdItensOrdem());
                     }
                 }
             }
             request.setAttribute("idOrdemSrv", idOrdemSrv);
             RequestDispatcher view = request.getRequestDispatcher("/pesquisarItensOrdem.jsp");
-            request.setAttribute("itensOrdens", ItemOrdem.obterItensOrdem(idOrdemSrv));
+            request.setAttribute("itensOrdens", ItensOrdemDAO.getInstancia().findAllItensOrdem(idOrdemSrv));
             view.forward(request, response);
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (IOException e) {
             throw new ServletException(e);
         }
     }
@@ -85,11 +91,11 @@ public class ManterItensOrdemController extends HttpServlet {
         try {
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
-            request.setAttribute("produtos", Produto.obterProdutos());
-            request.setAttribute("ordensServicos", OrdemServico.obterOrdemServicos());
+            request.setAttribute("produtos", ProdutoDAO.getInstancia().findAllProdutos());
+            request.setAttribute("ordensServicos", OrdemServicoDAO.getInstancia().findAllOrdemServicos());
             if (!operacao.equals("Incluir")) {
-                int idItensOrdem = Integer.parseInt(request.getParameter("idItensOrdem"));
-                ItemOrdem itensOrdem = ItemOrdem.obterItemOrdem(idItensOrdem);
+                Integer idItensOrdem = Integer.parseInt(request.getParameter("idItensOrdem"));
+                itensOrdem = ItensOrdemDAO.getInstancia().findItemOrdem(idItensOrdem);
                 request.setAttribute("itensOrdem", itensOrdem);
             }
             int idOrdemSrv = Integer.parseInt(request.getParameter("idOrdemSrv"));
@@ -98,7 +104,7 @@ public class ManterItensOrdemController extends HttpServlet {
             view.forward(request, response);
         } catch (ServletException e) {
             throw e;
-        } catch (IOException | SQLException | ClassNotFoundException e) {
+        } catch (IOException e) {
             throw new ServletException(e);
         }
     }

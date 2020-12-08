@@ -6,7 +6,6 @@
 package controller;
 
 import dao.AdminDAO;
-import dao.UsuarioDAO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -17,10 +16,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import model.Admin;
-import model.Usuario;
 
 public class ManterAdminController extends HttpServlet {
 
+    
+    private Admin admin;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -42,17 +42,14 @@ public class ManterAdminController extends HttpServlet {
         }
     }
     
-    private void prepararOperacao(HttpServletRequest request, HttpServletResponse response) 
+    public void prepararOperacao(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, ClassNotFoundException, SQLException {
-
         try {
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
-            //request.setAttribute("usuarios", Usuario.obterUsuarios());
-            request.setAttribute("usuarios", UsuarioDAO.getInstancia().findUsuario(Integer.MIN_VALUE));
             if (!operacao.equals("Incluir")) {
-                int idAdmin = Integer.parseInt(request.getParameter("idAdmin"));
-                Admin admin = AdminDAO.getInstancia().findAdmin(idAdmin);
+                Integer idAdmin = Integer.parseInt(request.getParameter("idAdmin"));
+                admin = AdminDAO.getInstancia().findAdmin(idAdmin);
                 request.setAttribute("admin", admin);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterAdmin.jsp");
@@ -66,26 +63,22 @@ public class ManterAdminController extends HttpServlet {
     
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) 
             throws SQLException, ClassNotFoundException, ServletException, IOException {
-        String operacao = request.getParameter("operacao");
-        
-        int idAdmin = Integer.parseInt(request.getParameter("numIdAdmin"));
-        String nome = request.getParameter("txtNome");
-        String email = request.getParameter("txtEmail");
-        String senha = request.getParameter("txtSenha");
-        
         try{
-            Admin admin = new Admin(idAdmin, idAdmin, nome, email,
-                    senha);
+            String operacao = request.getParameter("operacao");
+            String nome = request.getParameter("txtNome");
+            String email = request.getParameter("txtEmail");
+            String senha = request.getParameter("txtSenha");
             if (operacao.equals("Incluir")) {
+                admin = new Admin(nome, email, senha);
                 AdminDAO.getInstancia().save(admin);
-            } else {
-                if (operacao.equals("Excluir")) {
-                    AdminDAO.getInstancia().remove(idAdmin);
-                }
-                if (operacao.equals("Alterar")) {
+            } else if (operacao.equals("Excluir")) {
+                    AdminDAO.getInstancia().remove(admin.getIdUsuario());
+            } else if (operacao.equals("Alterar")) {
+                    admin.setNome(nome);
+                    admin.setEmail(email);
+                    admin.setSenha(senha);
                     AdminDAO.getInstancia().save(admin);
                 }
-            }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaAdminController");
             view.forward(request, response);
         }

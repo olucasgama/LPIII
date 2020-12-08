@@ -7,6 +7,7 @@ package dao;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import model.ItemVenda;
 import model.Venda;
 
 public class VendaDAO {
@@ -81,5 +82,22 @@ public class VendaDAO {
             em.close();
         }
         return venda;
+    }
+    
+    public ItemVenda removeItem (Integer idVenda) {
+        EntityManager em = new ConexaoFactory().getConexao();
+        ItemVenda itemVenda = null;
+        try {
+            itemVenda = em.find(ItemVenda.class, idVenda);
+            em.getTransaction().begin();
+            em.remove(itemVenda);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            System.err.println(e);
+        } finally {
+            em.close();
+        }
+        return itemVenda;
     }
 }

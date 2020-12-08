@@ -30,10 +30,12 @@ public class Fornecedor {
     private String complemento;
     @ManyToOne
     private Endereco endereco;
-    private int idEndereco;
+    //private int idEndereco;
 
-    public Fornecedor(Integer idFornecedor, String nomeFantasia, String cnpj, String nomeRepresentante, String email, String telefone, int numero, String complemento, Endereco endereco) {
-        this.idFornecedor = idFornecedor;
+    public Fornecedor(/*Integer idFornecedor,*/ String nomeFantasia, String cnpj, 
+            String nomeRepresentante, String email, String telefone, int numero,
+            String complemento, Endereco endereco) {
+        /*this.idFornecedor = idFornecedor;*/
         this.nomeFantasia = nomeFantasia;
         this.cnpj = cnpj;
         this.nomeRepresentante = nomeRepresentante;
@@ -112,10 +114,10 @@ public class Fornecedor {
     }
 
     public Endereco getEndereco() throws SQLException, ClassNotFoundException {
-        if((this.idEndereco !=0) && (this.endereco == null)){
-            //this.endereco = Endereco.obterEndereco(this.idEndereco);
-            this.endereco = EnderecoDAO.getInstancia().findEndereco(idEndereco);
-        }
+//        if((this.idEndereco !=0) && (this.endereco == null)){
+//            //this.endereco = Endereco.obterEndereco(this.idEndereco);
+//            this.endereco = EnderecoDAO.getInstancia().findEndereco(idEndereco);
+//        }
         return endereco;
     }
 
@@ -123,23 +125,31 @@ public class Fornecedor {
         this.endereco = endereco;
     }
 
-    public int getIdEndereco() {
-        return idEndereco;
-    }
-
-    public void setIdEndereco(int idEndereco) {
-        this.idEndereco = idEndereco;
-    }
-
-    public void gravar() throws SQLException, ClassNotFoundException {
-        FornecedorDAO.getInstancia().save(this);
-    }
-
-    public void excluir() throws ClassNotFoundException, SQLException {
-        FornecedorDAO.getInstancia().remove(idFornecedor);
-    }
-
-    public void alterar() throws ClassNotFoundException, SQLException {
-        FornecedorDAO.getInstancia().save(this);
-    }
+//    public int getIdEndereco() {
+//        return idEndereco;
+//    }
+//
+//    public void setIdEndereco(int idEndereco) {
+//        this.idEndereco = idEndereco;
+//    }
+    
+//   public static Fornecedor obterFornecedor(int idFornecedor) throws SQLException, ClassNotFoundException {
+//        return FornecedorDAO.getInstancia().findFornecedor(idFornecedor);
+//    }
+//
+//    public static List<Fornecedor> obterFornecedores() throws ClassNotFoundException, SQLException {
+//        return FornecedorDAO.getInstancia().findAllFornecedors();
+//    }
+//
+//    public void gravar() throws SQLException, ClassNotFoundException {
+//        FornecedorDAO.getInstancia().save(this);
+//    }
+//
+//    public void excluir() throws ClassNotFoundException, SQLException {
+//        FornecedorDAO.getInstancia().remove(idFornecedor);
+//    }
+//
+//    public void alterar() throws ClassNotFoundException, SQLException {
+//        FornecedorDAO.getInstancia().save(this);
+//    }
 }

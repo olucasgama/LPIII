@@ -44,8 +44,6 @@
         <form action="ManterVendaController?acao=confirmarOperacao&operacao=${operacao}" method="post" name="frmManterVenda" onsubmit="return validarFormulario(this)">
             <table>
                 <tr>
-                    <td><label> ID: </label>
-                        <input type="number" name="numIdVenda" value="${venda.idVenda}" <c:if test="${operacao != 'Incluir'}"> readonly</c:if>></td>
                     <td><label> Data da Venda: </label>
                         <input type="date" name="dtDataVenda" value="${venda.dataVenda}" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>></td>
                 </tr>

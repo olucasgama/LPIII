@@ -7,10 +7,12 @@ package controller;
 
 import dao.ClienteDAO;
 import dao.FormaPagamentoDAO;
+import dao.ItensVendaDAO;
 import dao.UsuarioDAO;
 import dao.VendaDAO;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -20,10 +22,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import model.Cliente;
 import model.FormaPagamento;
+import model.ItemVenda;
 import model.Usuario;
 import model.Venda;
 
 public class ManterVendaController extends HttpServlet {
+
+    private Venda venda;
+    private ItemVenda itemVenda;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,15 +43,14 @@ public class ManterVendaController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException, ClassNotFoundException {
         String acao = request.getParameter("acao");
-        if(acao.equals("confirmarOperacao")){
+        if (acao.equals("confirmarOperacao")) {
             confirmarOperacao(request, response);
-        }else{
-            if(acao.equals("prepararOperacao")){
+        } else {
+            if (acao.equals("prepararOperacao")) {
                 prepararOperacao(request, response);
             }
         }
     }
-    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -99,74 +104,72 @@ public class ManterVendaController extends HttpServlet {
     }// </editor-fold>
 
     private void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        try{
+        try {
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
             request.setAttribute("pagamentos", FormaPagamentoDAO.getInstancia().findAllFormasPagamentos());
-            //request.setAttribute("clientes", Cliente.obterClientes());
             request.setAttribute("clientes", ClienteDAO.getInstancia().findAllClientes());
-            //request.setAttribute("usuarios", Usuario.obterUsuarios());
             request.setAttribute("usuarios", UsuarioDAO.getInstancia().findAllUsuarios());
-            if(!operacao.equals("Incluir")){
-                int idVenda = Integer.parseInt(request.getParameter("idVenda"));
-                Venda venda = VendaDAO.getInstancia().findVenda(idVenda);
+            if (!operacao.equals("Incluir")) {
+                Integer idVenda = Integer.parseInt(request.getParameter("idVenda"));
+                venda = VendaDAO.getInstancia().findVenda(idVenda);
                 request.setAttribute("venda", venda);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterVenda.jsp");
             view.forward(request, response);
-        }catch(ServletException e){
+        } catch (ServletException e) {
             throw e;
-        }catch(IOException e){
+        } catch (IOException e) {
             throw new ServletException(e);
         }
     }
 
-    public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws SQLException, ClassNotFoundException, ServletException, IOException{
-        String operacao = request.getParameter("operacao");
-        int idVenda = Integer.parseInt(request.getParameter("numIdVenda"));
-        String dataVenda = request.getParameter("dtDataVenda");
-        int idCliente = operacao.equals("Excluir") ? 0 : Integer.parseInt(request.getParameter("optCliente"));
-        int idUsuario = operacao.equals("Excluir") ? 0 : Integer.parseInt(request.getParameter("optUsuario"));
-        float subTotal = Float.parseFloat(request.getParameter("numSubTotal"));
-        int codBarra = Integer.parseInt(request.getParameter("numCodBarra"));
-        float valorDesconto = Float.parseFloat(request.getParameter("numValorDesconto"));
-        String situacao = request.getParameter("optSituacao");
-        int idFormaPgto = operacao.equals("Excluir") ? 0 : Integer.parseInt(request.getParameter("optPagamento"));
-        try{
+    public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, ClassNotFoundException, ServletException, IOException {
+        try {
+            String operacao = request.getParameter("operacao");
+            String dataVenda = request.getParameter("dtDataVenda");
+            int idCliente = operacao.equals("Excluir") ? 0 : Integer.parseInt(request.getParameter("optCliente"));
+            int idUsuario = operacao.equals("Excluir") ? 0 : Integer.parseInt(request.getParameter("optUsuario"));
+            float subTotal = Float.parseFloat(request.getParameter("numSubTotal"));
+            int codBarra = Integer.parseInt(request.getParameter("numCodBarra"));
+            float valorDesconto = Float.parseFloat(request.getParameter("numValorDesconto"));
+            String situacao = request.getParameter("optSituacao");
+            int idFormaPgto = operacao.equals("Excluir") ? 0 : Integer.parseInt(request.getParameter("optPagamento"));
             Cliente cliente = null;
-            if(idCliente != 0){
-                //cliente = Cliente.obterCliente(idCliente);
+            if (idCliente != 0) {
                 cliente = ClienteDAO.getInstancia().findCliente(idCliente);
             }
             Usuario usuario = null;
-            if(idUsuario != 0){
-                //usuario = Usuario.obterUsuario(idUsuario);
+            if (idUsuario != 0) {
                 usuario = UsuarioDAO.getInstancia().findUsuario(idUsuario);
             }
             FormaPagamento formaPagamento = null;
-            if(idFormaPgto != 0){
+            if (idFormaPgto != 0) {
                 formaPagamento = FormaPagamentoDAO.getInstancia().findFormaPagamento(idFormaPgto);
             }
-            Venda venda = new Venda(idVenda, dataVenda, subTotal, codBarra, 
-            valorDesconto, situacao, usuario, formaPagamento, cliente);
-            if(operacao.equals("Incluir")){
-                venda.gravar();
-            }else{
-                if(operacao.equals("Alterar")){
-                    venda.alterar();
-                }else{
-                    if (operacao.equals("Excluir")){
-                        venda.excluir();
-                    }
-                }
+            if (operacao.equals("Incluir")) {
+                venda = new Venda(dataVenda, subTotal, codBarra, valorDesconto,
+                        situacao, usuario, formaPagamento, cliente);
+                VendaDAO.getInstancia().save(venda);
+            } else if (operacao.equals("Alterar")) {
+                venda.setCliente(cliente);
+                venda.setCodBarra(codBarra);
+                venda.setDataVenda(dataVenda);
+                venda.setFormaPagamento(formaPagamento);
+                venda.setSituacao(situacao);
+                venda.setUsuario(usuario);
+                venda.setSubTotal(subTotal);
+                venda.setValorDesconto(valorDesconto);
+                VendaDAO.getInstancia().save(venda);
+            } else if (operacao.equals("Excluir")) {
+                VendaDAO.getInstancia().removeItem(venda.getIdVenda());
+                VendaDAO.getInstancia().remove(venda.getIdVenda());
             }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaVendaController");
             view.forward(request, response);
-        }
-        catch(SQLException | ClassNotFoundException e){
+        } catch (IOException e) {
             throw new ServletException(e);
         }
     }
-    
-    
 }

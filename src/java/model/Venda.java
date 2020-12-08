@@ -5,10 +5,6 @@
  */
 package model;
 
-import dao.ClienteDAO;
-import dao.FormaPagamentoDAO;
-import dao.UsuarioDAO;
-import dao.VendaDAO;
 import java.sql.SQLException;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,18 +25,14 @@ public class Venda {
     private String situacao;
     @ManyToOne
     private Usuario usuario;
-    private int idUsuario;
     @ManyToOne
     private FormaPagamento formaPagamento;
-    private int idFormaPgto;
     @ManyToOne
-    private Cliente cliente;   
-    private int idCliente;
+    private Cliente cliente;
 
-    public Venda(Integer idVenda, String dataVenda, float subTotal, int codBarra, 
+    public Venda(String dataVenda, float subTotal, int codBarra, 
             float valorDesconto, String situacao, Usuario usuario, 
             FormaPagamento formaPagamento, Cliente cliente) {
-        this.idVenda = idVenda;
         this.dataVenda = dataVenda;
         this.subTotal = subTotal;
         this.codBarra = codBarra;
@@ -104,10 +96,6 @@ public class Venda {
 
     
     public Usuario getUsuario() throws SQLException, ClassNotFoundException {
-        if ((this.idUsuario != 0) && (this.usuario == null)){
-            //this.usuario = Usuario.obterUsuario(this.idUsuario);
-            this.usuario = UsuarioDAO.getInstancia().findUsuario(this.idUsuario);
-        }
         return usuario;
     }
 
@@ -116,10 +104,6 @@ public class Venda {
     }
 
     public FormaPagamento getFormaPagamento() throws SQLException, ClassNotFoundException {
-        if ((this.idFormaPgto != 0) && (this.formaPagamento == null)){
-            //this.formaPagamento = FormaPagamento.obterFormaPagamento(this.idFormaPgto);
-            this.formaPagamento = FormaPagamentoDAO.getInstancia().findFormaPagamento(idFormaPgto);
-        }
         return formaPagamento;
     }
 
@@ -128,50 +112,10 @@ public class Venda {
     }
 
     public Cliente getCliente() throws SQLException, ClassNotFoundException {
-        if ((this.idCliente != 0) && (this.cliente == null)){
-            //this.cliente = Cliente.obterCliente(this.idCliente);
-            this.cliente = ClienteDAO.getInstancia().findCliente(idCliente);
-        }
         return cliente;
     }
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
-    }
-
-    public int getIdUsuario() {
-        return idUsuario;
-    }
-
-    public void setIdUsuario(int idUsuario) {
-        this.idUsuario = idUsuario;
-    }
-
-    public int getIdFormaPgto() {
-        return idFormaPgto;
-    }
-
-    public void setIdFormaPgto(int idFormaPgto) {
-        this.idFormaPgto = idFormaPgto;
-    }
-
-    public int getIdCliente() {
-        return idCliente;
-    }
-
-    public void setIdCliente(int idCliente) {
-        this.idCliente = idCliente;
-    }
-    
-    public void gravar() throws ClassNotFoundException, SQLException{
-        VendaDAO.getInstancia().save(this);
-    }
-    
-    public void alterar() throws ClassNotFoundException, SQLException{
-        VendaDAO.getInstancia().save(this);
-    }
-    
-    public void excluir() throws ClassNotFoundException, SQLException {
-        VendaDAO.getInstancia().remove(idVenda);
     }
 }

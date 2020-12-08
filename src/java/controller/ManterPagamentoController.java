@@ -19,6 +19,8 @@ import model.FormaPagamento;
 
 public class ManterPagamentoController extends HttpServlet {
 
+    private FormaPagamento formaPagamento;
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -45,8 +47,9 @@ public class ManterPagamentoController extends HttpServlet {
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
             if (!operacao.equals("Incluir")){
-                int idFormaPgto = Integer.parseInt(request.getParameter("idFormaPgto"));
-                FormaPagamento formaPagamento = FormaPagamentoDAO.getInstancia().findFormaPagamento(idFormaPgto);
+                //int idFormaPgto = Integer.parseInt(request.getParameter("idFormaPgto"));
+                Integer idFormaPgto = Integer.parseInt(request.getParameter("idFormaPgto"));
+                formaPagamento = FormaPagamentoDAO.getInstancia().findFormaPagamento(idFormaPgto);
                 request.setAttribute("formaPagamento", formaPagamento);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterPagamento.jsp");
@@ -113,9 +116,11 @@ public class ManterPagamentoController extends HttpServlet {
     }// </editor-fold>
 
     
-    public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws SQLException, ClassNotFoundException, ServletException, IOException{
+    public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) 
+            throws SQLException, ClassNotFoundException, ServletException, IOException{
+        try{
         String operacao = request.getParameter("operacao");
-        int idFormaPgto = Integer.parseInt(request.getParameter("numIdPagamento"));
+        //int idFormaPgto = Integer.parseInt(request.getParameter("numIdPagamento"));
         String nome = request.getParameter("nome");
         int conta = Integer.parseInt(request.getParameter("conta"));
         int agencia = Integer.parseInt(request.getParameter("agencia"));
@@ -127,30 +132,34 @@ public class ManterPagamentoController extends HttpServlet {
         double taxaOperadora = Double.parseDouble(request.getParameter("taxaOperadora"));
         double multaAtraso = Double.parseDouble(request.getParameter("taxamultaAtraso"));
         String situacaoConfirmacao = request.getParameter("optSituacao");
-        
-        try{
-            FormaPagamento formaPagamento = new FormaPagamento(idFormaPgto, nome, 
-                    conta, agencia, nomeBanco, tipoConta, numMaxParcelas, 
-            intervaloParcelas, taxaBanco, taxaOperadora, multaAtraso, situacaoConfirmacao);
-            if(operacao.equals("Incluir")){
-                formaPagamento.gravar();
-            }else{
-                if (operacao.equals("Alterar")){
-                    formaPagamento.alterar();
-                }else{
-                    if (operacao.equals("Excluir")){
-                        formaPagamento.excluir();
-                    }
-                }
-            }
-            RequestDispatcher view = request.getRequestDispatcher("PesquisaPagamentoController");
-            view.forward(request, response);
+        if(operacao.equals("Incluir")){
+            formaPagamento = new FormaPagamento(/*idFormaPgto,*/ nome,
+                    conta, agencia, nomeBanco, tipoConta, numMaxParcelas,
+                    intervaloParcelas, taxaBanco, taxaOperadora, multaAtraso, situacaoConfirmacao);
+            //formaPagamento.gravar();
+            FormaPagamentoDAO.getInstancia().save(formaPagamento);
+        }else if (operacao.equals("Alterar")){
+            formaPagamento.setNome(nome);
+            formaPagamento.setConta(conta);
+            formaPagamento.setAgencia(agencia);
+            formaPagamento.setNomeBanco(nomeBanco);
+            formaPagamento.setTipoConta(tipoConta);
+            formaPagamento.setNumMaxParcelas(numMaxParcelas);
+            formaPagamento.setIntervaloParcelas(intervaloParcelas);
+            formaPagamento.setTaxaBanco(taxaBanco);
+            formaPagamento.setTaxaOperadora(taxaOperadora);
+            formaPagamento.setMultaAtraso(multaAtraso);
+            formaPagamento.setSituacaoConfirmacao(situacaoConfirmacao);
+            FormaPagamentoDAO.getInstancia().save(formaPagamento);
+            //formaPagamento.alterar();
+        }else if (operacao.equals("Excluir")){
+            //formaPagamento.excluir();
+            FormaPagamentoDAO.getInstancia().remove(formaPagamento.getIdFormaPgto());
         }
-        catch(SQLException e){
+        RequestDispatcher view = request.getRequestDispatcher("PesquisaPagamentoController");
+        view.forward(request, response);
+        }catch (IOException e){
             throw new ServletException(e);
-        }
-        catch(ClassNotFoundException e){
-           throw new ServletException(e);
         }
     }
 }

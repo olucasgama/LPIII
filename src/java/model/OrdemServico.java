@@ -5,10 +5,7 @@
  */
 package model;
 
-import dao.FornecedorDAO;
-import dao.OrdemServicoDAO;
 import java.sql.SQLException;
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,7 +14,7 @@ import javax.persistence.ManyToOne;
 
 @Entity
 public class OrdemServico {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idOrdemSrv;
@@ -27,11 +24,9 @@ public class OrdemServico {
     private int numOS;
     @ManyToOne
     private Fornecedor fornecedor;
-    private int idFornecedor;
 
-    public OrdemServico(Integer idOrdemSrv, String dataPedido, String situacao, 
+    public OrdemServico(String dataPedido, String situacao,
             String descricao, int numOS, Fornecedor fornecedor) {
-        this.idOrdemSrv = idOrdemSrv;
         this.dataPedido = dataPedido;
         this.situacao = situacao;
         this.descricao = descricao;
@@ -58,7 +53,6 @@ public class OrdemServico {
         this.numOS = numOS;
     }
 
-    
     public Integer getIdOrdemSrv() {
         return idOrdemSrv;
     }
@@ -84,42 +78,10 @@ public class OrdemServico {
     }
 
     public Fornecedor getFornecedor() throws SQLException, ClassNotFoundException {
-        if ((this.idFornecedor != 0)&& (this.fornecedor == null)){
-            //this.fornecedor = Fornecedor.obterFornecedor(this.idFornecedor);
-            this.fornecedor = FornecedorDAO.getInstancia().findFornecedor(idFornecedor);
-        }
         return fornecedor;
     }
 
     public void setFornecedor(Fornecedor fornecedor) {
         this.fornecedor = fornecedor;
-    }
-
-    public int getIdFornecedor() {
-        return idFornecedor;
-    }
-
-    public void setIdFornecedor(int idFornecedor) {
-        this.idFornecedor = idFornecedor;
-    }
-
-    public static OrdemServico obterOrdemServico (int idOrdemServico) throws SQLException, ClassNotFoundException{
-        return OrdemServicoDAO.getInstancia().findOrdemServico(idOrdemServico);
-    }
-    
-    public static List<OrdemServico> obterOrdemServicos() throws ClassNotFoundException, SQLException{
-        return OrdemServicoDAO.getInstancia().findAllOrdemServicos();
-    }
-    
-    public void gravar() throws ClassNotFoundException, SQLException{
-        OrdemServicoDAO.getInstancia().save(this);
-    }
-    
-    public void alterar() throws ClassNotFoundException, SQLException{
-        OrdemServicoDAO.getInstancia().save(this);
-    }
-    
-    public void excluir() throws ClassNotFoundException, SQLException{
-        OrdemServicoDAO.getInstancia().remove(idOrdemSrv);
     }
 }

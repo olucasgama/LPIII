@@ -60,9 +60,6 @@
 
                 var mensagem;
                 mensagem = "";
-                if (form.numIdColaborador.value == "") {
-                    mensagem = mensagem + "Informe o id do colaborador\n";
-                }
                 if (form.txtNome.value == "") {
                     mensagem = mensagem + "Informe o nome\n";
                 }
@@ -110,9 +107,7 @@
         <form action="ManterColaboradorController?acao=confirmarOperacao&operacao=${operacao}" method="post" name="frmManterColaborador" onsubmit="return validarFormulario(this)">
             <table>
                 <tr>
-                    <td><label>ID Colaborador: </label>
-                        <input type="number" name="numIdColaborador" value="${colaborador.idColaborador}" <c:if test="${operacao != 'Incluir'}"> readonly</c:if>></td>
-                        <td><label>Nome: </label>
+                       <td><label>Nome: </label>
                             <input type="text" name="txtNome" value="${colaborador.nome}" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>></td>
                         <td><label>Data Nascimento: </label>
                             <input type="date" name="txtDataNasc" value="${colaborador.dataNascimento}" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>></td>

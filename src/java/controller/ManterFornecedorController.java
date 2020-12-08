@@ -21,6 +21,8 @@ import model.Fornecedor;
 
 public class ManterFornecedorController extends HttpServlet {
 
+    private Fornecedor fornecedor;
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -93,15 +95,15 @@ public class ManterFornecedorController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, ClassNotFoundException, SQLException {
+    private void prepararOperacao(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, ClassNotFoundException, SQLException {
         try{
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
-            //request.setAttribute("enderecos", Endereco.obterEnderecos());
             request.setAttribute("enderecos", EnderecoDAO.getInstancia().findAllEnderecos());
             if(!operacao.equals("Incluir")){
-                int idFornecedor = Integer.parseInt(request.getParameter("idFornecedor"));
-                Fornecedor fornecedor = FornecedorDAO.getInstancia().findFornecedor(idFornecedor);
+                Integer idFornecedor = Integer.parseInt(request.getParameter("idFornecedor"));
+                fornecedor = FornecedorDAO.getInstancia().findFornecedor(idFornecedor);
                 request.setAttribute("fornecedor", fornecedor);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterFornecedor.jsp");
@@ -115,9 +117,10 @@ public class ManterFornecedorController extends HttpServlet {
         }
     }
     
-    public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws SQLException, ClassNotFoundException, ServletException{
+    public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) 
+            throws SQLException, ClassNotFoundException, ServletException{
         String operacao = request.getParameter("operacao");
-        int idFornecedor = Integer.parseInt(request.getParameter("numIdFornecedor"));
+        try{
         String nomeFantasia = request.getParameter("txtNomeFantasia");
         String cnpj = request.getParameter("numCnpj");
         String nomeRepresentante = request.getParameter("txtNomeRepresentante");
@@ -125,38 +128,32 @@ public class ManterFornecedorController extends HttpServlet {
         String telefone = request.getParameter("numTelefone");
         int numero = Integer.parseInt(request.getParameter("numEndereco"));
         String complemento = request.getParameter("txtComplemento");
-        int idEndereco = operacao.equals("Excluir") ? 0 : Integer.parseInt(request.getParameter("optEndereco"));
-        
-        try{
-            Endereco endereco = null;
-            if(idEndereco != 0){
-                //endereco = Endereco.obterEndereco(idEndereco);
-                endereco = EnderecoDAO.getInstancia().findEndereco(idEndereco);
-            }
-            Fornecedor fornecedor = new Fornecedor(idFornecedor, nomeFantasia, 
-                    cnpj, nomeRepresentante, email, telefone, numero, 
-                    complemento, endereco);
-            if(operacao.equals("Incluir")){
-                fornecedor.gravar();
-            }
-            else{
-                if(operacao.equals("Excluir")){
-                    fornecedor.excluir();
-                }
-                if(operacao.equals("Alterar")){
-                    fornecedor.alterar();
-                }
-            }
-            RequestDispatcher view = request.getRequestDispatcher("PesquisaFornecedorController");
-            view.forward(request, response);
+        int idEndereco = operacao.equals("Excluir") ? 0 : Integer.parseInt(request.getParameter("optEndereco"));        
+        Endereco endereco = null;
+        if(idEndereco != 0){
+            endereco = EnderecoDAO.getInstancia().findEndereco(idEndereco);
+        }
+        if(operacao.equals("Incluir")){
+            fornecedor = new Fornecedor (nomeFantasia, cnpj, nomeRepresentante,
+                        email, telefone, numero, complemento, endereco);
+            FornecedorDAO.getInstancia().save(fornecedor);
+        } else if(operacao.equals("Excluir")){
+            FornecedorDAO.getInstancia().remove(fornecedor.getIdFornecedor());
+        } else if(operacao.equals("Alterar")){
+            fornecedor.setNomeFantasia(nomeFantasia);
+            fornecedor.setCnpj(cnpj);
+            fornecedor.setNomeRepresentante(nomeRepresentante);
+            fornecedor.setEmail(email);
+            fornecedor.setTelefone(telefone);
+            fornecedor.setNumero(numero);
+            fornecedor.setComplemento(complemento);
+            fornecedor.setEndereco(endereco);
+            FornecedorDAO.getInstancia().save(fornecedor);
+        }
+        RequestDispatcher view = request.getRequestDispatcher("PesquisaFornecedorController");
+        view.forward(request, response);
         } catch (IOException e){
             throw new ServletException(e);
-        }
-        catch(SQLException e){
-            throw new ServletException(e);
-        }
-        catch(ClassNotFoundException e){
-           throw new ServletException(e);
         }
     }
 }

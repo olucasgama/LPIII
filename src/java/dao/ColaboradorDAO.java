@@ -25,7 +25,7 @@ public class ColaboradorDAO {
         EntityManager em = new ConexaoFactory().getConexao();
         try {
             em.getTransaction().begin();
-            if (colaborador.getIdColaborador() == null) {
+            if (/*colaborador.getIdColaborador()*/ colaborador.getIdUsuario() == null) {
                 em.persist(colaborador);
             } else {
                 em.merge(colaborador);
@@ -44,7 +44,7 @@ public class ColaboradorDAO {
         EntityManager em = new ConexaoFactory().getConexao();
         List<Colaborador> colaboradors = null;
         try {
-            colaboradors = em.createQuery("from colaborador c").getResultList();
+            colaboradors = em.createQuery("from Colaborador c").getResultList();
         } catch (Exception e) {
             System.err.println(e);
         } finally {

@@ -38,10 +38,6 @@
         <form action="ManterItensOrdemController?acao=confirmarOperacao&operacao=${operacao}&idOrdemSrv=${idOrdemSrv}" method="post" name="frmManterItensOrdem" onsubmit="return validarFormulario(this)">
             <table>
                 <tr>
-                    <td>
-                        <label> ID: </label>
-                        <input type="number" name="numIdItensOrdem" value="${itensOrdem.idItensOrdem}" <c:if test="${operacao != 'Incluir'}"> readonly</c:if>>
-                        </td>
                         <td>
                             <label> ID Ordem:</label>
                         <select name="optOrdemSrv" disabled>

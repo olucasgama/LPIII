@@ -47,11 +47,6 @@
         <form action="ManterProdutoController?acao=confirmarOperacao&operacao=${operacao}" method="post" name="frmManterProduto" onsubmit="return validarFormulario(this)">
             <table>
                 <tr>
-                    <td><label> ID: </label>
-                        <input type="number" name="numIdProduto" value="${produto.idProduto}" <c:if test="${operacao != 'Incluir'}"> readonly</c:if>></td>
-                </tr>
-                <tr><td></td></tr>
-                <tr>
                     <td><label> Nome: </label>
                         <input type="text" name="nomeProduto" value="${produto.nome}" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>></td>
                     <td>

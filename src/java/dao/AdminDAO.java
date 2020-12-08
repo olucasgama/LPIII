@@ -25,7 +25,7 @@ public class AdminDAO {
         EntityManager em = new ConexaoFactory().getConexao();
         try {
             em.getTransaction().begin();
-            if (admin.getIdAdmin() == null) {
+            if (/*admin.getIdAdmin()*/ admin.getIdUsuario() == null) {
                 em.persist(admin);
             } else {
                 em.merge(admin);

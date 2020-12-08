@@ -15,28 +15,29 @@ import javax.persistence.PrimaryKeyJoinColumn;
 @PrimaryKeyJoinColumn(name="idUsuario")
 public class Admin extends Usuario{
     
-    private Integer idAdmin;
+    //private Integer idAdmin;
     
     public Admin(){
     
     }
 
-    public Admin(Integer idAdmin, Integer idUsuario, String nome, String email, String senha) {
-        super(idUsuario, nome, email, senha);
-        this.idAdmin = idAdmin;
+    public Admin(/*Integer idAdmin,*/ /*Integer idUsuario,*/ 
+            String nome, String email, String senha) {
+        super(nome, email, senha);
+        //this.idAdmin = idAdmin;
     }
 
-    public Admin(Integer idUsuario, String nome, String email, String senha) {
-        super(idUsuario, nome, email, senha);
-    }
+//    public Admin(Integer idUsuario, String nome, String email, String senha) {
+//        super(idUsuario, nome, email, senha);
+//    }
 
-    public Integer getIdAdmin() {
-        return idAdmin;
-    }
-
-    public void setIdAdmin(int idAdmin) {
-        this.idAdmin = idAdmin;
-    }
+//    public Integer getIdAdmin() {
+//        return idAdmin;
+//    }
+//
+//    public void setIdAdmin(int idAdmin) {
+//        this.idAdmin = idAdmin;
+//    }
     
     /*public static Admin obterAdmin(int idAdmin) throws SQLException, ClassNotFoundException {
         return AdminDAO.getInstancia().findAdmin(idAdmin);

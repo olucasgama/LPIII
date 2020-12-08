@@ -8,6 +8,7 @@ package dao;
 import java.util.List;
 import javax.persistence.EntityManager;
 import model.ItemVenda;
+import model.Venda;
 
 public class ItensVendaDAO {
 
@@ -21,25 +22,20 @@ public class ItensVendaDAO {
 
     }
 
-    public ItemVenda save(ItemVenda itemVenda) {
+    public List<ItemVenda> findAllItensVenda(Integer idVenda) {
         EntityManager em = new ConexaoFactory().getConexao();
+        List<ItemVenda> itensVenda = null;
         try {
-            em.getTransaction().begin();
-            if (itemVenda.getIdItensVenda() == null) {
-                em.persist(itemVenda);
-            } else {
-                em.merge(itemVenda);
-            }
-            em.getTransaction().commit();
+            itensVenda = em.createNativeQuery("SELECT iv.* FROM itemvenda iv "
+                    + "WHERE iv.venda_idvenda = " + idVenda ,ItemVenda.class).getResultList();
         } catch (Exception e) {
-            em.getTransaction().rollback();
             System.err.println(e);
         } finally {
             em.close();
         }
-        return itemVenda;
+        return itensVenda;
     }
-
+    
     public List<ItemVenda> findAllItemVendas() {
         EntityManager em = new ConexaoFactory().getConexao();
         List<ItemVenda> itensVenda = null;
@@ -65,20 +61,26 @@ public class ItensVendaDAO {
         }
         return itemVenda;
     }
-    
-    public ItemVenda findItensDaVenda(Integer idVenda) {
+
+    public ItemVenda save(ItemVenda itemVenda) {
         EntityManager em = new ConexaoFactory().getConexao();
-        ItemVenda itensDaVenda = null;
         try {
-            itensDaVenda = em.find(ItemVenda.class, idVenda);
+            em.getTransaction().begin();
+            if (itemVenda.getIdItemVenda() == null) {
+                em.persist(itemVenda);
+            } else {
+                em.merge(itemVenda);
+            }
+            em.getTransaction().commit();
         } catch (Exception e) {
+            em.getTransaction().rollback();
             System.err.println(e);
         } finally {
             em.close();
         }
-        return itensDaVenda;
+        return itemVenda;
     }
-
+    
     public ItemVenda remove(Integer idItemVenda) {
         EntityManager em = new ConexaoFactory().getConexao();
         ItemVenda itemVenda = null;

@@ -38,10 +38,6 @@
         <form action="ManterOrdemServicoController?acao=confirmarOperacao&operacao=${operacao}" method="post" name="frmManterOrdemServico" onsubmit="return validarFormulario(this)">
             <table>
                 <tr>
-                    <td>
-                        <label> ID: </label>
-                        <input type="number" name="numIdOrdemServico" value="${ordemServico.idOrdemSrv}" <c:if test="${operacao != 'Incluir'}"> readonly</c:if>>
-                        </td>
                         <td>
                             <label> Número da Ordem de Serviço: </label>
                             <input type="number" name="txtNumeroOS" value="${ordemServico.numOS}" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>

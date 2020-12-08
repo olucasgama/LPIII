@@ -9,7 +9,6 @@ import dao.ColaboradorDAO;
 import dao.EnderecoDAO;
 import dao.UsuarioDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,11 +18,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import model.Colaborador;
-import model.Usuario;
 import model.Endereco;
 
 public class ManterColaboradorController extends HttpServlet {
-
+    
+    private Colaborador colaborador;
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -96,18 +96,15 @@ public class ManterColaboradorController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ClassNotFoundException, SQLException {
+    public void prepararOperacao(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException, ClassNotFoundException, SQLException {
         try {
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
-            //request.setAttribute("usuarios", Usuario.obterUsuarios());
-            request.setAttribute("usuarios", UsuarioDAO.getInstancia().findAllUsuarios());
-            //request.setAttribute("enderecos", Endereco.obterEnderecos());
             request.setAttribute("enderecos", EnderecoDAO.getInstancia().findAllEnderecos());
             if(!operacao.equals("Incluir")){
-                int idColaborador = Integer.parseInt(request.getParameter("idColaborador"));
-                //Colaborador colaborador = Colaborador.obterColaborador(idColaborador);
-                Colaborador colaborador = ColaboradorDAO.getInstancia().findColaborador(idColaborador);
+                Integer idColaborador = Integer.parseInt(request.getParameter("idColaborador"));
+                colaborador = ColaboradorDAO.getInstancia().findColaborador(idColaborador);
                 request.setAttribute("colaborador", colaborador);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterColaborador.jsp");
@@ -119,45 +116,51 @@ public class ManterColaboradorController extends HttpServlet {
         }
     }
     
-    public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws SQLException, ClassNotFoundException, ServletException{
-        String operacao = request.getParameter("operacao");
-        int idColaborador = Integer.parseInt(request.getParameter("numIdColaborador"));
-        String nome = request.getParameter("txtNome");
-        String cpf = request.getParameter("numCPF");
-        String rg = request.getParameter("numRg");
-        String telefone = request.getParameter("txtTelefone");
-        String celular = request.getParameter("txtCelular");
-        String email = request.getParameter("txtEmail");
-        String senha = request.getParameter("txtSenha");   
-        String dataNascimento = request.getParameter("txtDataNasc");
-        String estadoCivil = request.getParameter("optEstadoCivil");
-        String sexo = request.getParameter("optSexo");
-        int numero = Integer.parseInt(request.getParameter("numEndereco"));
-        String complemento = request.getParameter("txtComplemento");
-        int idEndereco = operacao.equals("Excluir") ? 0 : Integer.parseInt(request.getParameter("optEndereco"));
-        
+    public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) 
+            throws SQLException, ClassNotFoundException, ServletException {
         try{
+            String operacao = request.getParameter("operacao");
+            String nome = request.getParameter("txtNome");
+            String cpf = request.getParameter("numCPF");
+            String rg = request.getParameter("numRg");
+            String telefone = request.getParameter("txtTelefone");
+            String celular = request.getParameter("txtCelular");
+            String email = request.getParameter("txtEmail");
+            String senha = request.getParameter("txtSenha");   
+            String dataNascimento = request.getParameter("txtDataNasc");
+            String estadoCivil = request.getParameter("optEstadoCivil");
+            String sexo = request.getParameter("optSexo");
+            int numero = Integer.parseInt(request.getParameter("numEndereco"));
+            String complemento = request.getParameter("txtComplemento");
+            int idEndereco = operacao.equals("Excluir") ? 0 : Integer.parseInt(request.getParameter("optEndereco"));
             Endereco endereco = null;
             if(idEndereco != 0){
-                //endereco = Endereco.obterEndereco(idEndereco);
                 endereco = EnderecoDAO.getInstancia().findEndereco(idEndereco);
             }
-            Colaborador colaborador = new Colaborador(idColaborador, cpf, rg,
-            dataNascimento, telefone, celular, estadoCivil, sexo, numero, 
-                    complemento, idColaborador, nome, email, senha, endereco);
             if(operacao.equals("Incluir")){
-                //colaborador.gravar();
+                colaborador = new Colaborador(cpf, rg, dataNascimento, 
+                    telefone, celular, estadoCivil, sexo, numero, complemento, 
+                    nome, email, senha, endereco);
                 ColaboradorDAO.getInstancia().save(colaborador);
-            }else{
-                if(operacao.equals("Excluir")){
-                    //colaborador.excluir();
-                    ColaboradorDAO.getInstancia().remove(idColaborador);
-                }
-                if(operacao.equals("Alterar")){
-                    //colaborador.alterar();
+            }else if(operacao.equals("Excluir")){
+                    ColaboradorDAO.getInstancia().remove(colaborador.getIdUsuario());
+                }else if(operacao.equals("Alterar")){
+                    colaborador.setCpf(cpf);
+                    colaborador.setRg(rg);
+                    colaborador.setDataNascimento(dataNascimento);
+                    colaborador.setTelefone(telefone);
+                    colaborador.setCelular(celular);
+                    colaborador.setEstadoCivil(estadoCivil);
+                    colaborador.setSexo(sexo);
+                    colaborador.setNumero(numero);
+                    colaborador.setComplemento(complemento);
+                    colaborador.setNome(nome);
+                    colaborador.setEmail(email);
+                    colaborador.setSenha(senha);
+                    colaborador.setEndereco(endereco);
                     ColaboradorDAO.getInstancia().save(colaborador);
                 }
-            }
+            
             RequestDispatcher view = request.getRequestDispatcher("PesquisaColaboradorController");
             view.forward(request, response);
         } catch (IOException e){

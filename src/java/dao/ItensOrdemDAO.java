@@ -16,28 +16,23 @@ public class ItensOrdemDAO {
     public static ItensOrdemDAO getInstancia() {
         return instancia;
     }
-    
-    private ItensOrdemDAO(){
-        
+
+    private ItensOrdemDAO() {
+
     }
 
-    public ItemOrdem save(ItemOrdem itemOrdem) {
+    public List<ItemOrdem> findAllItensOrdem(Integer idOrdemSrv) {
         EntityManager em = new ConexaoFactory().getConexao();
+        List<ItemOrdem> itensOrdem = null;
         try {
-            em.getTransaction().begin();
-            if (itemOrdem.getIdItensOrdem() == null) {
-                em.persist(itemOrdem);
-            } else {
-                em.merge(itemOrdem);
-            }
-            em.getTransaction().commit();
+            itensOrdem = em.createNativeQuery("SELECT io.* FROM itemordem io "
+                    + "WHERE io.ordemservico_idordemsrv = " + idOrdemSrv, ItemOrdem.class).getResultList();
         } catch (Exception e) {
-            em.getTransaction().rollback();
             System.err.println(e);
         } finally {
             em.close();
         }
-        return itemOrdem;
+        return itensOrdem;
     }
 
     public List<ItemOrdem> findAllItemOrdems() {
@@ -53,12 +48,31 @@ public class ItensOrdemDAO {
         return itensOrdem;
     }
 
-    public static ItemOrdem findItemOrdem(Integer idItemOrdem) {
+    public ItemOrdem findItemOrdem(Integer idItemOrdem) {
         EntityManager em = new ConexaoFactory().getConexao();
         ItemOrdem itemOrdem = null;
         try {
             itemOrdem = em.find(ItemOrdem.class, idItemOrdem);
         } catch (Exception e) {
+            System.err.println(e);
+        } finally {
+            em.close();
+        }
+        return itemOrdem;
+    }
+
+    public ItemOrdem save(ItemOrdem itemOrdem) {
+        EntityManager em = new ConexaoFactory().getConexao();
+        try {
+            em.getTransaction().begin();
+            if (itemOrdem.getIdItensOrdem() == null) {
+                em.persist(itemOrdem);
+            } else {
+                em.merge(itemOrdem);
+            }
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
             System.err.println(e);
         } finally {
             em.close();

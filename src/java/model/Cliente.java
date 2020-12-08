@@ -37,10 +37,15 @@ public class Cliente {
     private String complemento;
     @ManyToOne
     private Endereco endereco;
-    private int idEndereco;
+    //private int idEndereco;
 
-    public Cliente(Integer idCliente, String cnpj, String razaoSocial, String inscricaoEstadual, String nome, String cpf, String rg, String telefone, String celular, String email, String dataNascimento, String estadoCivil, String sexo, int numero, String complemento, Endereco endereco) {
-        this.idCliente = idCliente;
+    public Cliente(/*Integer idCliente,*/ String cnpj, String razaoSocial,
+            String inscricaoEstadual, String nome, String cpf, String rg, 
+                    String telefone, String celular, String email, 
+                            String dataNascimento, String estadoCivil, 
+                            String sexo, int numero, String complemento, 
+                            Endereco endereco) {
+        //this.idCliente = idCliente;
         this.cnpj = cnpj;
         this.razaoSocial = razaoSocial;
         this.inscricaoEstadual = inscricaoEstadual;
@@ -182,9 +187,9 @@ public class Cliente {
     }
 
     public Endereco getEndereco() throws ClassNotFoundException, SQLException {
-        if ((this.idEndereco != 0) && (this.endereco == null)) {
+        /*if ((this.idEndereco != 0) && (this.endereco == null)) {
             this.endereco = EnderecoDAO.getInstancia().findEndereco(idEndereco);
-        }
+        }*/
         return endereco;
     }
 
@@ -192,13 +197,13 @@ public class Cliente {
         this.endereco = endereco;
     }
 
-    public int getIdEndereco() {
+    /*public int getIdEndereco() {
         return idEndereco;
     }
 
     public void setIdEndereco(int idEndereco) {
         this.idEndereco = idEndereco;
-    }
+    }*/
     
     /*
     public static Cliente obterCliente (int idCliente) throws SQLException, ClassNotFoundException{

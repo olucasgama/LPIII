@@ -12,9 +12,6 @@
                 var mensagem;
                 mensagem = "";
 
-                if (form.numIdPagamento.value == "") {
-                    mensagem = mensagem + "Informe o Id do pagamento\n";
-                }
                 if (form.nome.value == "") {
                     mensagem = mensagem + "Informe o nome da forma de pagamento\n";
                 }
@@ -46,12 +43,6 @@
         <h1>Manter Pagamento - ${operacao}</h1>
         <form action="ManterPagamentoController?acao=confirmarOperacao&operacao=${operacao}" method="post" name="frmManterPagamento"  onsubmit="return validarFormulario(this)">
         <table>
-                <tr>
-                    <td><label> ID: </label>
-                        <input type="number" name="numIdPagamento" value="${formaPagamento.idFormaPgto}"<c:if test="${operacao != 'Incluir'}"> readonly</c:if>>
-                    </td>
-                </tr>
-                <tr><td></td></tr>
                 <tr>
                     
                     <td><label> Nome da Forma de Pagamento: </label>

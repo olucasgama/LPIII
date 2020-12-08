@@ -6,6 +6,7 @@
 package controller;
 
 import dao.ItensVendaDAO;
+import dao.ProdutoDAO;
 import dao.VendaDAO;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -21,6 +22,8 @@ import model.Produto;
 import model.Venda;
 
 public class ManterItensVendaController extends HttpServlet {
+
+    private ItemVenda itensVenda;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -95,42 +98,38 @@ public class ManterItensVendaController extends HttpServlet {
     }// </editor-fold>
 
     private void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws SQLException, ClassNotFoundException, ServletException, IOException {
-        String operacao = request.getParameter("operacao");
-        int idItensVenda = Integer.parseInt(request.getParameter("numIdItensVenda"));
-        int idVenda = Integer.parseInt(request.getParameter("idVenda"));
-        int idProduto = Integer.parseInt(request.getParameter("optProduto"));
-        int quantidade = Integer.parseInt(request.getParameter("numQuantidade"));
-        float precoUnitario = Float.parseFloat(request.getParameter("numPrecoUnitario"));
-
         try {
+            String operacao = request.getParameter("operacao");
+            int idVenda = Integer.parseInt(request.getParameter("idVenda"));
+            int idProduto = Integer.parseInt(request.getParameter("optProduto"));
+            int quantidade = Integer.parseInt(request.getParameter("numQuantidade"));
+            float precoUnitario = Float.parseFloat(request.getParameter("numPrecoUnitario"));
             Produto produto = null;
             if (idProduto != 0) {
-                produto = Produto.obterProduto(idProduto);
+                produto = ProdutoDAO.getInstancia().findProduto(idProduto);
             }
             Venda venda = null;
             if (idVenda != 0) {
                 venda = VendaDAO.getInstancia().findVenda(idVenda);
             }
-            ItemVenda itensVenda = new ItemVenda(idItensVenda, quantidade, precoUnitario,
-                    venda, produto);
-            itensVenda.setIdVenda(idVenda);
-            itensVenda.setIdProduto(idProduto);
             if (operacao.equals("Incluir")) {
-                itensVenda.gravar();
-            } else {
-                if (operacao.equals("Alterar")) {
-                    itensVenda.alterar();
-                } else {
-                    if (operacao.equals("Excluir")) {
-                        itensVenda.excluir();
-                    }
-                }
+                itensVenda = new ItemVenda(quantidade, precoUnitario, venda,
+                        produto);
+                ItensVendaDAO.getInstancia().save(itensVenda);
+            } else if (operacao.equals("Alterar")) {
+                itensVenda.setPrecoUnitario(precoUnitario);
+                itensVenda.setProduto(produto);
+                itensVenda.setQuantidade(quantidade);
+                itensVenda.setVenda(venda);
+                ItensVendaDAO.getInstancia().save(itensVenda);
+            } else if (operacao.equals("Excluir")) {
+                ItensVendaDAO.getInstancia().remove(itensVenda.getIdItemVenda());
             }
             request.setAttribute("idVenda", idVenda);
             RequestDispatcher view = request.getRequestDispatcher("/pesquisarItensVenda.jsp");
-            request.setAttribute("itensVenda", ItensVendaDAO.getInstancia().findItensDaVenda(idVenda));
+            request.setAttribute("itensVenda", ItensVendaDAO.getInstancia().findAllItensVenda(idVenda));
             view.forward(request, response);
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (IOException e) {
             throw new ServletException(e);
         }
     }
@@ -139,11 +138,11 @@ public class ManterItensVendaController extends HttpServlet {
         try {
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
-            request.setAttribute("produtos", Produto.obterProdutos());
+            request.setAttribute("produtos", ProdutoDAO.getInstancia().findAllProdutos());
             request.setAttribute("vendas", VendaDAO.getInstancia().findAllVendas());
             if (!operacao.equals("Incluir")) {
-                int idIntensVenda = Integer.parseInt(request.getParameter("idItensVenda"));
-                ItemVenda itensVenda = ItensVendaDAO.getInstancia().findItemVenda(idIntensVenda);
+                Integer idItensVenda = Integer.parseInt(request.getParameter("idItemVenda"));
+                itensVenda = ItensVendaDAO.getInstancia().findItemVenda(idItensVenda);
                 request.setAttribute("itensVenda", itensVenda);
             }
             int idVenda = Integer.parseInt(request.getParameter("idVenda"));
@@ -153,7 +152,7 @@ public class ManterItensVendaController extends HttpServlet {
             view.forward(request, response);
         } catch (ServletException e) {
             throw e;
-        } catch (IOException | SQLException | ClassNotFoundException e) {
+        } catch (IOException e) {
             throw new ServletException(e);
         }
     }

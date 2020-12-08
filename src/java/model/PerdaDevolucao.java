@@ -25,13 +25,13 @@ public class PerdaDevolucao {
     private String tipo;
     @ManyToOne
     private Produto produto;
-    private int idProduto;
+    //private int idProduto;
     @ManyToOne
     private Venda venda;
-    private int idVenda;
+    //private int idVenda;
 
-    public PerdaDevolucao(Integer idPerdaDevolucao, String tipo, Produto produto, Venda venda) {
-        this.idPerdaDevolucao = idPerdaDevolucao;
+    public PerdaDevolucao(/*Integer idPerdaDevolucao,*/ String tipo, Produto produto, Venda venda) {
+        //this.idPerdaDevolucao = idPerdaDevolucao;
         this.tipo = tipo;
         this.produto = produto;
         this.venda = venda;
@@ -57,10 +57,10 @@ public class PerdaDevolucao {
     }
 
     public Produto getProduto() throws SQLException, ClassNotFoundException {
-        if ((this.idProduto != 0) && (this.produto == null)){
-            //this.produto = Produto.obterProduto(this.idProduto);
-            this.produto = ProdutoDAO.getInstancia().findProduto(idProduto);
-        }
+//        if ((this.idProduto != 0) && (this.produto == null)){
+//            //this.produto = Produto.obterProduto(this.idProduto);
+//            this.produto = ProdutoDAO.getInstancia().findProduto(idProduto);
+//        }
         return produto;
     }
 
@@ -69,10 +69,10 @@ public class PerdaDevolucao {
     }
 
     public Venda getVenda() throws SQLException, ClassNotFoundException {
-        if ((this.idVenda != 0) && (this.venda== null)){
-            //this.venda = Venda.obterVenda(this.idVenda);
-            this.venda = VendaDAO.getInstancia().findVenda(idVenda);
-        }
+//        if ((this.idVenda != 0) && (this.venda== null)){
+//            //this.venda = Venda.obterVenda(this.idVenda);
+//            this.venda = VendaDAO.getInstancia().findVenda(idVenda);
+//        }
         return venda;
     }
 
@@ -80,39 +80,39 @@ public class PerdaDevolucao {
         this.venda = venda;
     }
 
-    public int getIdProduto() {
-        return idProduto;
-    }
-
-    public void setIdProduto(int idProduto) {
-        this.idProduto = idProduto;
-    }
-
-    public int getIdVenda() {
-        return idVenda;
-    }
-
-    public void setIdVenda(int idVenda) {
-        this.idVenda = idVenda;
-    }
-
-    public static PerdaDevolucao obterPerdaDevolucao (int idPerdaDevolucao) throws SQLException, ClassNotFoundException{
-        return PerdaDevolucaoDAO.getInstancia().findPerdaDevolucao(idPerdaDevolucao);
-    }
-    
-    public static List<PerdaDevolucao> obterPerdaDevolucoes() throws ClassNotFoundException, SQLException{
-        return PerdaDevolucaoDAO.getInstancia().findAllPerdaDevolucoes();
-    }
-    
-    public void gravar() throws ClassNotFoundException, SQLException{
-        PerdaDevolucaoDAO.getInstancia().save(this);
-    }
-    
-    public void excluir() throws ClassNotFoundException, SQLException {
-        PerdaDevolucaoDAO.getInstancia().remove(idPerdaDevolucao);
-    }
-    
-    public void alterar() throws ClassNotFoundException, SQLException{
-        PerdaDevolucaoDAO.getInstancia().save(this);
-    }
+//    public int getIdProduto() {
+//        return idProduto;
+//    }
+//
+//    public void setIdProduto(int idProduto) {
+//        this.idProduto = idProduto;
+//    }
+//
+//    public int getIdVenda() {
+//        return idVenda;
+//    }
+//
+//    public void setIdVenda(int idVenda) {
+//        this.idVenda = idVenda;
+//    }
+//
+//    public static PerdaDevolucao obterPerdaDevolucao (int idPerdaDevolucao) throws SQLException, ClassNotFoundException{
+//        return PerdaDevolucaoDAO.getInstancia().findPerdaDevolucao(idPerdaDevolucao);
+//    }
+//    
+//    public static List<PerdaDevolucao> obterPerdaDevolucoes() throws ClassNotFoundException, SQLException{
+//        return PerdaDevolucaoDAO.getInstancia().findAllPerdaDevolucoes();
+//    }
+//    
+//    public void gravar() throws ClassNotFoundException, SQLException{
+//        PerdaDevolucaoDAO.getInstancia().save(this);
+//    }
+//    
+//    public void excluir() throws ClassNotFoundException, SQLException {
+//        PerdaDevolucaoDAO.getInstancia().remove(idPerdaDevolucao);
+//    }
+//    
+//    public void alterar() throws ClassNotFoundException, SQLException{
+//        PerdaDevolucaoDAO.getInstancia().save(this);
+//    }
 }

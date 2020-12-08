@@ -19,6 +19,8 @@ import model.Categoria;
 
 public class ManterCategoriaController extends HttpServlet {
 
+    private Categoria categoria; //Criei
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -50,7 +52,7 @@ public class ManterCategoriaController extends HttpServlet {
             if (!operacao.equals("Incluir")) {
                 int idCategoria = Integer.parseInt(request.getParameter("idCategoria"));
                 //Categoria categoria = Categoria.obterCategoria(idCategoria);
-                Categoria categoria = CategoriaDAO.getInstancia().findCategoria(idCategoria);
+                categoria = CategoriaDAO.getInstancia().findCategoria(idCategoria);
                 request.setAttribute("categoria", categoria);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterCategoria.jsp");
@@ -64,21 +66,22 @@ public class ManterCategoriaController extends HttpServlet {
     
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) 
             throws SQLException, ClassNotFoundException, ServletException, IOException {
-        String operacao = request.getParameter("operacao");
-        int idCategoria = Integer.parseInt(request.getParameter("numIdCategoria"));
-        String descricao = request.getParameter("txtDescricao");
-        
         try{
-        Categoria categoria = new Categoria(idCategoria, descricao);
+        String operacao = request.getParameter("operacao");
+//        int idCategoria = Integer.parseInt(request.getParameter("numIdCategoria")); TIREI
+        String descricao = request.getParameter("txtDescricao");
+//        /*Categoria*/ categoria = new Categoria(/*idCategoria,*/ descricao);
             if (operacao.equals("Incluir")) {
+                categoria = new Categoria (descricao); //Criei
                 //categoria.gravar();
                 CategoriaDAO.getInstancia().save(categoria);
             } else {
                 if (operacao.equals("Excluir")) {
                     //categoria.excluir();
-                    CategoriaDAO.getInstancia().remove(idCategoria);
+                    CategoriaDAO.getInstancia().remove(categoria.getIdCategoria());
                 }else{
                     if (operacao.equals("Alterar")) {
+                        categoria.setDescricao(descricao);
                         //categoria.alterar();
                         CategoriaDAO.getInstancia().save(categoria);
                     }

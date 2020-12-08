@@ -38,9 +38,6 @@
                 var mensagem;
                 mensagem = "";
 
-                if (form.numIdFornecedor.value == "") {
-                    mensagem = mensagem + "Informe o Id do Fornecedor\n";
-                }
                 if (form.txtNomeFantasia.value == "") {
                     mensagem = mensagem + "Informe o nome fantasia\n";
                 }
@@ -78,11 +75,6 @@
         <h1>Manter Fornecedor - ${operacao}</h1>
         <form action="ManterFornecedorController?acao=confirmarOperacao&operacao=${operacao}" method="post" name="frmManterFornecedor" onsubmit="return validarFormulario(this)">
             <table>
-                <tr>
-                    <td><label> ID: </label>
-                        <input type="number" name="numIdFornecedor" value="${fornecedor.idFornecedor}" <c:if test="${operacao != 'Incluir'}"> readonly</c:if>></td>
-                </tr>
-                <tr><td></td></tr> 
                 <tr>
                     <td><label> Nome Fantasia: </label>
                         <input type="text" name="txtNomeFantasia" value="${fornecedor.nomeFantasia}" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>></td>

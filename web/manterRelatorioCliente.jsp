@@ -10,13 +10,16 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Relatório de Clientes</title>
+        <link href="css/style.css" rel="stylesheet">
     </head>
     <body>
-        <h1>Relatório de Clientes</h1>
-        <form action="RelClientesController" method="post">
-            Faixa de Clientes:
+        <ul class="main-nav">
+            <h2>SGMC - Relatório de Clientes</h2>
+        </ul>
+        <form class="form" action="RelClientesController" method="post">
+            <h3> Faixa de Clientes: </h3>
             <input type="text" name="txtCodClienteInicio"/><br/>
-            até
+            <h3> até </h3>
             <input type="text" name="txtCodClienteFim"/><br/>
             <input type="submit"/>
         </form>

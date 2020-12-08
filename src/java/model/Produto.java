@@ -37,16 +37,16 @@ public class Produto {
     private float largura;
     @ManyToOne
     private Fornecedor fornecedor;
-    private int idFornecedor;
+//    private int idFornecedor;
     @ManyToOne
     private Categoria categoria;
-    private int idCategoria;
+//    private int idCategoria;
 
-    public Produto(Integer idProduto, String nome, int codInterno, int codBarra, 
+    public Produto(/*Integer idProduto,*/ String nome, int codInterno, int codBarra, 
             String unidadeMedida, float precoCompra, float peso, float altura, 
             float comprimento, String validade, int qtdMinima, int qtdAtual, 
             int qtdMaxima, float largura, Fornecedor fornecedor, Categoria categoria) {
-        this.idProduto = idProduto;
+//        this.idProduto = idProduto;
         this.nome = nome;
         this.codInterno = codInterno;
         this.codBarra = codBarra;
@@ -180,10 +180,10 @@ public class Produto {
     }
 
     public Fornecedor getFornecedor() throws SQLException, ClassNotFoundException {
-        if ((this.idFornecedor != 0)&& (this.fornecedor == null)){
-            //this.fornecedor = Fornecedor.obterFornecedor(this.idFornecedor);
-            this.fornecedor = FornecedorDAO.getInstancia().findFornecedor(idFornecedor);
-        }
+//        if ((this.idFornecedor != 0)&& (this.fornecedor == null)){
+//            //this.fornecedor = Fornecedor.obterFornecedor(this.idFornecedor);
+//            this.fornecedor = FornecedorDAO.getInstancia().findFornecedor(idFornecedor);
+//        }
         return fornecedor;
     }
 
@@ -192,10 +192,10 @@ public class Produto {
     }
 
     public Categoria getCategoria() throws SQLException, ClassNotFoundException {
-        if ((this.idCategoria != 0) && (this.categoria == null)){
-            //this.categoria = Categoria.obterCategoria(this.idCategoria);
-            this.categoria = CategoriaDAO.getInstancia().findCategoria(idCategoria);
-        }
+//        if ((this.idCategoria != 0) && (this.categoria == null)){
+//            //this.categoria = Categoria.obterCategoria(this.idCategoria);
+//            this.categoria = CategoriaDAO.getInstancia().findCategoria(idCategoria);
+//        }
         return categoria;
     }
 
@@ -203,39 +203,39 @@ public class Produto {
         this.categoria = categoria;
     }
 
-    public int getIdFornecedor() {
-        return idFornecedor;
-    }
-
-    public void setIdFornecedor(int idFornecedor) {
-        this.idFornecedor = idFornecedor;
-    }
-
-    public int getIdCategoria() {
-        return idCategoria;
-    }
-
-    public void setIdCategoria(int idCategoria) {
-        this.idCategoria = idCategoria;
-    }
-    
-    public static Produto obterProduto (int idProduto) throws SQLException, ClassNotFoundException{
-        return ProdutoDAO.getInstancia().findProduto(idProduto);
-    }
-    
-    public static List<Produto> obterProdutos() throws ClassNotFoundException, SQLException{
-        return ProdutoDAO.getInstancia().findAllProdutos();
-    }
-    
-    public void gravar() throws ClassNotFoundException, SQLException{
-        ProdutoDAO.getInstancia().save(this);
-    }
-    
-    public void alterar() throws ClassNotFoundException, SQLException{
-        ProdutoDAO.getInstancia().save(this);
-    }
-    
-    public void excluir() throws ClassNotFoundException, SQLException {
-        ProdutoDAO.getInstancia().remove(idProduto);
-    }
+//    public int getIdFornecedor() {
+//        return idFornecedor;
+//    }
+//
+//    public void setIdFornecedor(int idFornecedor) {
+//        this.idFornecedor = idFornecedor;
+//    }
+//
+//    public int getIdCategoria() {
+//        return idCategoria;
+//    }
+//
+//    public void setIdCategoria(int idCategoria) {
+//        this.idCategoria = idCategoria;
+//    }
+//    
+//    public static Produto obterProduto (int idProduto) throws SQLException, ClassNotFoundException{
+//        return ProdutoDAO.getInstancia().findProduto(idProduto);
+//    }
+//    
+//    public static List<Produto> obterProdutos() throws ClassNotFoundException, SQLException{
+//        return ProdutoDAO.getInstancia().findAllProdutos();
+//    }
+//    
+//    public void gravar() throws ClassNotFoundException, SQLException{
+//        ProdutoDAO.getInstancia().save(this);
+//    }
+//    
+//    public void alterar() throws ClassNotFoundException, SQLException{
+//        ProdutoDAO.getInstancia().save(this);
+//    }
+//    
+//    public void excluir() throws ClassNotFoundException, SQLException {
+//        ProdutoDAO.getInstancia().remove(idProduto);
+//    }
 }

@@ -31,8 +31,8 @@ public class FormaPagamento {
     private double multaAtraso;
     private String situacaoConfirmacao;
 
-    public FormaPagamento(Integer idFormaPgto, String nome, int conta, int agencia, String nomeBanco, String tipoConta, int numMaxParcelas, int intervaloParcelas, double taxaBanco, double taxaOperadora, double multaAtraso, String situacaoConfirmacao) {
-        this.idFormaPgto = idFormaPgto;
+    public FormaPagamento(/*Integer idFormaPgto,*/ String nome, int conta, int agencia, String nomeBanco, String tipoConta, int numMaxParcelas, int intervaloParcelas, double taxaBanco, double taxaOperadora, double multaAtraso, String situacaoConfirmacao) {
+        //this.idFormaPgto = idFormaPgto;
         this.nome = nome;
         this.conta = conta;
         this.agencia = agencia;
@@ -145,6 +145,14 @@ public class FormaPagamento {
         this.situacaoConfirmacao = situacaoConfirmacao;
     }
     
+    /*public static FormaPagamento obterFormaPagamento (int idFormaPgto) throws SQLException, ClassNotFoundException{
+        return FormaPagamentoDAO.getInstancia().findFormaPagamento(idFormaPgto);
+}
+    
+    public static List<FormaPagamento> obterFormasPagamentos() throws ClassNotFoundException, SQLException{
+        return FormaPagamentoDAO.getInstancia().findAllFormasPagamentos();
+    }
+    
     public void gravar() throws SQLException, ClassNotFoundException {
         FormaPagamentoDAO.getInstancia().save(this);
     }
@@ -155,5 +163,5 @@ public class FormaPagamento {
     
     public void excluir() throws ClassNotFoundException, SQLException{
         FormaPagamentoDAO.getInstancia().remove(idFormaPgto);
-    }
+    }*/
 }

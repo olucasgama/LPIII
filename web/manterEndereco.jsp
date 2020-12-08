@@ -12,9 +12,6 @@
                 var mensagem;
                 mensagem = "";
 
-                if (form.numIdEndereco.value == "") {
-                    mensagem = mensagem + "Informe o Id do Endereço\n";
-                }
                 if (form.txtLogradouro.value == "") {
                     mensagem = mensagem + "Informe o logradouro\n";
                 }
@@ -44,11 +41,6 @@
         <h1>Manter Endereco - ${operacao}</h1>
         <form action="ManterEnderecoController?acao=confirmarOperacao&operacao=${operacao}" method="post" name="frmManterEndereco" onsubmit="return validarFormulario(this)">
             <table>
-                <tr>
-                    <td><label> ID: </label>
-                        <input type="number" name="numIdEndereco" value="${endereco.idEndereco}" <c:if test="${operacao != 'Incluir'}"> readonly</c:if>></td>
-                    </tr>
-                    <tr><td></td></tr> 
                     <tr>
                         <td><label> Logradouro: </label>
                             <input type="text" name="txtLogradouro" value="${endereco.logradouro}" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>></td>

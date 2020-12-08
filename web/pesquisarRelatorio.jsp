@@ -20,7 +20,7 @@
     <ul class="main-table">
         <li>
             <a href="javascript:void(0)"
-                onClick="popUp('manterRelatorioCliente.jsp', 'RelClientes', 'scrollbars=no, width=500, height=270, left=0, top=0')">Clientes</a>
+                onClick="popUp('manterRelatorioCliente.jsp', 'RelClientes', 'scrollbars=no, width=500, height=400, left=0, top=0')">Clientes</a>
         </li>
         <li>
             <a href="javascript:void(0)"

@@ -9,11 +9,7 @@
             function validarFormulario(form) { 
                 
                 var mensagem;
-                mensagem = "";
-                
-                if (form.numIdPerdaDevolucao.value == ""){
-                    mensagem = mensagem + "Informe o id da Perda/Devolução\n";
-                }                             
+                mensagem = "";                         
                 if (frmManterDevolucao.optVenda.selectedIndex == 0) {
                     mensagem = mensagem + "Informe a venda\n";
                 }
@@ -34,8 +30,6 @@
         <form action="ManterDevolucaoController?acao=confirmarOperacao&operacao=${operacao}" method="post" name="frmManterDevolucao" onsubmit="return validarFormulario(this)">
             <table>
                 <tr>
-                    <td><label> ID: </label>
-                        <input type="number" name="numIdPerdaDevolucao" value="${perdaDevolucao.idPerdaDevolucao}" <c:if test="${operacao != 'Incluir'}"> readonly</c:if>></td>
                     <td>
                         <label> Tipo: </label>
                         <select name="optTipo" <c:if test="${operacao == 'Excluir'}"> disabled</c:if>>

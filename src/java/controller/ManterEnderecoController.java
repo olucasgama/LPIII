@@ -19,6 +19,8 @@ import model.Endereco;
 
 public class ManterEnderecoController extends HttpServlet {
 
+    private Endereco endereco;
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -48,7 +50,7 @@ public class ManterEnderecoController extends HttpServlet {
             if (!operacao.equals("Incluir")) {
                 int idEndereco = Integer.parseInt(request.getParameter("idEndereco"));
                 //Endereco endereco = Endereco.obterEndereco(idEndereco);
-                Endereco endereco = EnderecoDAO.getInstancia().findEndereco(idEndereco);
+                endereco = EnderecoDAO.getInstancia().findEndereco(idEndereco);
                 request.setAttribute("endereco", endereco);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterEndereco.jsp");
@@ -62,25 +64,30 @@ public class ManterEnderecoController extends HttpServlet {
     
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) 
             throws SQLException, ClassNotFoundException, ServletException, IOException {
+        try{
         String operacao = request.getParameter("operacao");
-        int idEndereco = Integer.parseInt(request.getParameter("numIdEndereco"));
+//        int idEndereco = Integer.parseInt(request.getParameter("numIdEndereco"));
         String logradouro = request.getParameter("txtLogradouro");
         String cidade = request.getParameter("txtCidade");
         String bairro = request.getParameter("txtBairro");
         String uf = request.getParameter("txtUf");
         String cep = request.getParameter("txtCep");
-        
-        try{
-        Endereco endereco = new Endereco(idEndereco, logradouro, cidade, bairro, 
-                uf, cep);
+//        endereco = new Endereco(/*idEndereco,*/ logradouro, cidade, bairro, 
+//                uf, cep);
             if (operacao.equals("Incluir")) {
                 //endereco.gravar();
+                endereco = new Endereco (logradouro, cidade, bairro, uf, cep);
                 EnderecoDAO.getInstancia().save(endereco);
             } else {
                 if (operacao.equals("Excluir")) {
-                    EnderecoDAO.getInstancia().remove(idEndereco);
+                    EnderecoDAO.getInstancia().remove(endereco.getIdEndereco());
                 }
                 if (operacao.equals("Alterar")) {
+                    endereco.setLogradouro(logradouro);
+                    endereco.setCidade(cidade);
+                    endereco.setBairro(bairro);
+                    endereco.setUf(uf);
+                    endereco.setCep(cep);
                     EnderecoDAO.getInstancia().save(endereco);
                 }
             }

@@ -33,7 +33,7 @@ public class PesquisaItensVendaController extends HttpServlet {
             throws ServletException, IOException, ClassNotFoundException, SQLException {
         int idVenda = Integer.parseInt(request.getParameter("idVenda"));
         request.setAttribute("idVenda", idVenda);
-        request.setAttribute("itensVenda", ItensVendaDAO.getInstancia().findItensDaVenda(idVenda));
+        request.setAttribute("itensVenda", ItensVendaDAO.getInstancia().findAllItensVenda(idVenda));
         RequestDispatcher view = request.getRequestDispatcher("/pesquisarItensVenda.jsp");
         view.forward(request, response);
     }

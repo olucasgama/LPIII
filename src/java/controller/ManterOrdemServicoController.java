@@ -6,6 +6,7 @@
 package controller;
 
 import dao.FornecedorDAO;
+import dao.OrdemServicoDAO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -19,6 +20,8 @@ import model.Fornecedor;
 import model.OrdemServico;
 
 public class ManterOrdemServicoController extends HttpServlet {
+
+    private OrdemServico ordemServico;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,10 +37,10 @@ public class ManterOrdemServicoController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
         String acao = request.getParameter("acao");
-        if(acao.equals("confirmarOperacao")){
+        if (acao.equals("confirmarOperacao")) {
             confirmarOperacao(request, response);
-        }else{
-            if(acao.equals("prepararOperacao")){
+        } else {
+            if (acao.equals("prepararOperacao")) {
                 prepararOperacao(request, response);
             }
         }
@@ -95,59 +98,56 @@ public class ManterOrdemServicoController extends HttpServlet {
     }// </editor-fold>
 
     private void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, ClassNotFoundException, SQLException, IOException {
-        try{
+        try {
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
             request.setAttribute("fornecedores", FornecedorDAO.getInstancia().findAllFornecedors());
-            if (!operacao.equals("Incluir")){
-                int idOrdemSrv  = Integer.parseInt(request.getParameter("idOrdemSrv"));
-                OrdemServico ordemServico = OrdemServico.obterOrdemServico(idOrdemSrv);
+            if (!operacao.equals("Incluir")) {
+                Integer idOrdemSrv = Integer.parseInt(request.getParameter("idOrdemSrv"));
+                ordemServico = OrdemServicoDAO.getInstancia().findOrdemServico(idOrdemSrv);
                 request.setAttribute("ordemServico", ordemServico);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterOrdemServico.jsp");
             view.forward(request, response);
-        }catch(ServletException e){
+        } catch (ServletException e) {
             throw e;
-        }catch(IOException | SQLException | ClassNotFoundException e){
+        } catch (IOException e) {
             throw new ServletException(e);
         }
     }
-    
-    public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws SQLException, ClassNotFoundException, ServletException, IOException{
+
+    public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws SQLException, ClassNotFoundException, ServletException, IOException {
         String operacao = request.getParameter("operacao");
-        int idOrdemSrv = Integer.parseInt(request.getParameter("numIdOrdemServico"));
         String dataPedido = request.getParameter("dtDataPedido");
         String situacao = request.getParameter("optSituacao");
         String descricao = request.getParameter("txtDescricao");
         int numOS = Integer.parseInt(request.getParameter("txtNumeroOS"));
         int idFornecedor = operacao.equals("Excluir") ? 0 : Integer.parseInt(request.getParameter("optFornecedor"));
-        
-        try{
-            Fornecedor fornecedor = null;
-            if(idFornecedor != 0){
-                fornecedor = FornecedorDAO.getInstancia().findFornecedor(idFornecedor);
+
+        Fornecedor fornecedor = null;
+        if (idFornecedor != 0) {
+            fornecedor = FornecedorDAO.getInstancia().findFornecedor(idFornecedor);
+        }
+        if (operacao.equals("Incluir")) {
+            ordemServico = new OrdemServico(dataPedido, situacao,
+                    descricao, numOS, fornecedor);
+            OrdemServicoDAO.getInstancia().save(ordemServico);
+        } else {
+            if (operacao.equals("Excluir")) {
+                OrdemServicoDAO.getInstancia().removeItem(ordemServico.getIdOrdemSrv());
+                OrdemServicoDAO.getInstancia().remove(ordemServico.getIdOrdemSrv());
             }
-            OrdemServico ordemServico = new OrdemServico(idOrdemSrv, dataPedido, 
-                    situacao, descricao, numOS, fornecedor);
-            if(operacao.equals("Incluir")){
-                ordemServico.gravar();
-            }else{
-                if (operacao.equals("Excluir")){
-                        ordemServico.excluir();
-                    }                
-                    if (operacao.equals("Alterar")){
-                    ordemServico.alterar();
-                }
+            if (operacao.equals("Alterar")) {
+                ordemServico.setDataPedido(dataPedido);
+                ordemServico.setDescricao(descricao);
+                ordemServico.setFornecedor(fornecedor);
+                ordemServico.setNumOS(numOS);
+                ordemServico.setSituacao(situacao);
+                OrdemServicoDAO.getInstancia().save(ordemServico);
             }
-            RequestDispatcher view = request.getRequestDispatcher("PesquisaOrdemServicoController");
-            view.forward(request, response);
         }
-        catch(SQLException e){
-            throw new ServletException(e);
-        }
-        catch(ClassNotFoundException e){
-           throw new ServletException(e);
-        }
+        RequestDispatcher view = request.getRequestDispatcher("PesquisaOrdemServicoController");
+        view.forward(request, response);
     }
 
 }

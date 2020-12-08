@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import model.FormaPagamento;
 
 public class PesquisaPagamentoController extends HttpServlet {
 
@@ -29,6 +30,7 @@ public class PesquisaPagamentoController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
+        //request.setAttribute("formasPagamento", FormaPagamento.obterFormasPagamentos());
         request.setAttribute("formasPagamento", FormaPagamentoDAO.getInstancia().findAllFormasPagamentos());
         RequestDispatcher view = request.getRequestDispatcher("/pesquisarPagamento.jsp");
         view.forward(request, response);

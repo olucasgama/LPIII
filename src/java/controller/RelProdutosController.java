@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.BD;
 import dao.CategoriaDAO;
 import java.io.IOException;
 import java.sql.Connection;
@@ -63,14 +64,13 @@ public class RelProdutosController extends HttpServlet {
             throws ServletException, IOException {
         Connection conexao = null;
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            conexao = DriverManager.getConnection("jdbc:mysql://localhost/sgmc", "root", "");
+            conexao = BD.getConexao();
             HashMap parametros = new HashMap();
             parametros.put("CAT1", Integer.parseInt(request.getParameter("txtCodCategoria")));
-            String relatorio = getServletContext().getRealPath("/WEB-INF") + "/relProdutos.jasper";
+            String relatorio = getServletContext().getRealPath("/WEB-INF") + "/relProdutosCategoria.jasper";
             JasperPrint jp = JasperFillManager.fillReport(relatorio, parametros, conexao);
             byte[] relat = JasperExportManager.exportReportToPdf(jp);
-            response.setHeader("Content-Disposition", "attachment;filename=relProdutos.pdf");
+            response.setHeader("Content-Disposition", "attachment;filename=relProdutosCategoria.pdf");
             response.setContentType("application/pdf");
             response.getOutputStream().write(relat);
         } catch (SQLException ex) {

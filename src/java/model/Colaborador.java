@@ -5,10 +5,7 @@
  */
 package model;
 
-import dao.ColaboradorDAO;
-import dao.EnderecoDAO;
 import java.sql.SQLException;
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -17,7 +14,7 @@ import javax.persistence.PrimaryKeyJoinColumn;
 @PrimaryKeyJoinColumn(referencedColumnName="idUsuario")
 public class Colaborador extends Usuario {
 
-    private Integer idColaborador;
+    //private Integer idColaborador;
     private String cpf;
     private String rg;
     private String dataNascimento;
@@ -29,19 +26,17 @@ public class Colaborador extends Usuario {
     private String complemento;
     @ManyToOne
     private Endereco endereco;
-    private int idEndereco;
 
     public Colaborador(){
         
     }
     
-    public Colaborador(Integer idColaborador, String cpf, String rg, 
+    public Colaborador(String cpf, String rg, 
             String dataNascimento, String telefone, String celular, 
             String estadoCivil, String sexo, int numero, String complemento, 
-            Integer idUsuario, String nome, String email, String senha, 
+            /*Integer idUsuario,*/ String nome, String email, String senha, 
             Endereco endereco) {
-        super(idUsuario, nome, email, senha);
-        this.idColaborador = idColaborador;
+        super(/*idUsuario,*/ nome, email, senha);
         this.cpf = cpf;
         this.rg = rg;
         this.dataNascimento = dataNascimento;
@@ -54,9 +49,9 @@ public class Colaborador extends Usuario {
         this.endereco = endereco;
     }
 
-    public Colaborador(Integer idUsuario, String nome, String email, String senha) {
+    /*public Colaborador(Integer idUsuario, String nome, String email, String senha) {
         super(idUsuario, nome, email, senha);
-    }
+    }*/
     
     public int getNumero() {
         return numero;
@@ -72,16 +67,6 @@ public class Colaborador extends Usuario {
 
     public void setComplemento(String complemento) {
         this.complemento = complemento;
-    }
-    
-    
-
-    public Integer getIdColaborador() {
-        return idColaborador;
-    }
-
-    public void setIdColaborador(int idColaborador) {
-        this.idColaborador = idColaborador;
     }
 
     public String getCpf() {
@@ -142,23 +127,15 @@ public class Colaborador extends Usuario {
 
     //Alterar aqui
     public Endereco getEndereco() throws SQLException, ClassNotFoundException {
-        if((this.idEndereco !=0) && (this.endereco == null)){
+        //if((this.idEndereco !=0) && (this.endereco == null)){
             //this.endereco = Endereco.obterEndereco(this.idEndereco);
-            this.endereco = EnderecoDAO.getInstancia().findEndereco(idEndereco);
-        }
+            //this.endereco = EnderecoDAO.getInstancia().findEndereco(idEndereco);
+        //}
         return endereco;
     }
 
     public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
-    }
-
-    public int getIdEndereco() {
-        return idEndereco;
-    }
-
-    public void setIdEndereco(int idEndereco) {
-        this.idEndereco = idEndereco;
     }
 
 /*    

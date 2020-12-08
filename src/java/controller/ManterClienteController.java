@@ -21,6 +21,8 @@ import model.Endereco;
 
 public class ManterClienteController extends HttpServlet {
 
+    private Cliente cliente;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -41,7 +43,6 @@ public class ManterClienteController extends HttpServlet {
             }
         }
     }
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -92,18 +93,15 @@ public class ManterClienteController extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
-    private void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, ClassNotFoundException, SQLException {
-
+    private void prepararOperacao(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, ClassNotFoundException, SQLException {
         try {
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
-            //request.setAttribute("enderecos", Endereco.obterEnderecos());
             request.setAttribute("enderecos", EnderecoDAO.getInstancia().findAllEnderecos());
             if (!operacao.equals("Incluir")) {
-                int idCliente = Integer.parseInt(request.getParameter("idCliente"));
-                //Cliente cliente = Cliente.obterCliente(idCliente);
-                Cliente cliente = ClienteDAO.getInstancia().findCliente(idCliente);
+                Integer idCliente = Integer.parseInt(request.getParameter("idCliente"));
+                cliente = ClienteDAO.getInstancia().findCliente(idCliente);
                 request.setAttribute("cliente", cliente);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterCliente.jsp");
@@ -115,10 +113,10 @@ public class ManterClienteController extends HttpServlet {
         }
     }
 
-    public boolean confirmarOperacao(HttpServletRequest request, HttpServletResponse response) 
+    public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ClassNotFoundException, ServletException, IOException {
+        try{
         String operacao = request.getParameter("operacao");
-        int idCliente = Integer.parseInt(request.getParameter("numIdCliente"));
         String nome = request.getParameter("txtNome");
         String cnpj = request.getParameter("numCnpj");
         String razaoSocial = request.getParameter("txtRazao");
@@ -134,39 +132,40 @@ public class ManterClienteController extends HttpServlet {
         int numero = Integer.parseInt(request.getParameter("numEndereco"));
         String complemento = request.getParameter("txtComplemento");
         int idEndereco = operacao.equals("Excluir") ? 0 : Integer.parseInt(request.getParameter("optEndereco"));
-
-        try{
-            Endereco endereco = null;
-            if (idEndereco != 0) {
-                //endereco = Endereco.obterEndereco(idEndereco);
-                endereco = EnderecoDAO.getInstancia().findEndereco(idEndereco);
-            }
-            Cliente cliente = new Cliente(idCliente, cnpj, 
-                    razaoSocial, inscricaoEstadual, nome, cpf, rg, telefone, 
-                    celular, email, dataNascimento, estadoCivil, sexo, numero,
-                    complemento, endereco);
-            if (operacao.equals("Incluir")) {
-                //cliente.gravar();
-                ClienteDAO.getInstancia().save(cliente);
-            } else {
-                if (operacao.equals("Excluir")) {
-                    //cliente.excluir();
-                    ClienteDAO.getInstancia().remove(idCliente);
-                }
-                if (operacao.equals("Alterar")) {
-                    //cliente.alterar();
-                    ClienteDAO.getInstancia().save(cliente);
-                }
-            }
-            RequestDispatcher view = request.getRequestDispatcher("PesquisaClienteController");
-            view.forward(request, response);   
+        Endereco endereco = null;
+        if (idEndereco != 0) {
+            endereco = EnderecoDAO.getInstancia().findEndereco(idEndereco);
+        }
+        if (operacao.equals("Incluir")) {
+            cliente = new Cliente(cnpj, razaoSocial, inscricaoEstadual, nome, 
+                    cpf, rg, telefone, celular, email, dataNascimento, estadoCivil, 
+                    sexo, numero, complemento, endereco);
+            ClienteDAO.getInstancia().save(cliente);
+        } else if (operacao.equals("Alterar")) {
+            cliente.setCnpj(cnpj);
+            cliente.setRazaoSocial(razaoSocial);
+            cliente.setInscricaoEstadual(inscricaoEstadual);
+            cliente.setNome(nome);
+            cliente.setCpf(cpf);
+            cliente.setRg(rg);
+            cliente.setTelefone(telefone);
+            cliente.setCelular(celular);
+            cliente.setEmail(email);
+            cliente.setDataNascimento(dataNascimento);
+            cliente.setEstadoCivil(estadoCivil);
+            cliente.setSexo(sexo);
+            cliente.setNumero(numero);
+            cliente.setComplemento(complemento);
+            cliente.setEndereco(endereco);
+            ClienteDAO.getInstancia().save(cliente);
+        } else if (operacao.equals("Excluir")) {
+             ClienteDAO.getInstancia().remove(cliente.getIdCliente());
+        }
+        RequestDispatcher view = request.getRequestDispatcher("PesquisaClienteController");
+        view.forward(request, response);
         }catch (IOException e) {
             throw new ServletException(e);
-        } catch (ServletException e) {
-            throw e;
         }
-        return true;
-    }     
+    }
 }
-
 

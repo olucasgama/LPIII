@@ -8,6 +8,7 @@ package dao;
 import java.util.List;
 import model.OrdemServico;
 import javax.persistence.EntityManager;
+import model.ItemOrdem;
 
 public class OrdemServicoDAO {
 
@@ -81,5 +82,22 @@ public class OrdemServicoDAO {
             em.close();
         }
         return ordemServico;
+    }
+    
+    public ItemOrdem removeItem(Integer idOrdemSrv) {
+        EntityManager em = new ConexaoFactory().getConexao();
+        ItemOrdem itemOrdem = null;
+        try {
+            itemOrdem = em.find(ItemOrdem.class, idOrdemSrv);
+            em.getTransaction().begin();
+            em.remove(itemOrdem);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            System.err.println(e);
+        } finally {
+            em.close();
+        }
+        return itemOrdem;
     }
 }
